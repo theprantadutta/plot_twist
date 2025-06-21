@@ -1,13 +1,30 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plot_twist/presentation/core/auth_guard.dart';
 
-import 'presentation/core/app_colors.dart'; // The new app shell
+import 'application/home/home_providers.dart';
+import 'data/local/persistence_service.dart';
+import 'firebase_options.dart';
+import 'presentation/core/app_colors.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // 1. Create an instance of our persistence service
+  final persistenceService = PersistenceService();
+  // 2. Initialize it (and wait for it to complete)
+  await persistenceService.init();
   dotenv.load();
-  runApp(const PlotTwistsApp());
+  runApp(
+    ProviderScope(
+      overrides: [
+        persistenceServiceProvider.overrideWithValue(persistenceService),
+      ],
+      child: PlotTwistsApp(),
+    ),
+  );
 }
 
 class PlotTwistsApp extends StatefulWidget {

@@ -64,3 +64,4 @@ firebase.json
 
 # Ignore Generated Files
 lib/generated/
+lib/**/*.g.dart

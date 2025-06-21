@@ -1,45 +1,21 @@
-// lib/presentation/core/auth_guard.dart
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/auth/auth_repository.dart'; // Correct path
 import '../pages/auth/auth_screen.dart';
 import '../shell/app_shell.dart';
 import 'app_colors.dart';
 
-class AuthGuard extends StatefulWidget {
+// The AuthGuard can now be a much simpler StatelessWidget
+class AuthGuard extends StatelessWidget {
   const AuthGuard({super.key});
 
   @override
-  State<AuthGuard> createState() => _AuthGuardState();
-}
-
-class _AuthGuardState extends State<AuthGuard> {
-  final AuthRepository _authRepository = AuthRepository();
-  late Future<bool> _hasSessionFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkSession();
-  }
-
-  void _checkSession() {
-    setState(() {
-      _hasSessionFuture = _authRepository.hasSession();
-    });
-  }
-
-  void _logout() async {
-    await _authRepository.deleteSession();
-    _checkSession(); // Re-check session status to show login screen
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: _hasSessionFuture,
+    // We use a StreamBuilder to listen to Firebase's authentication state in real-time.
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
+        // While the connection is being established, show a loading spinner.
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(
@@ -48,18 +24,24 @@ class _AuthGuardState extends State<AuthGuard> {
           );
         }
 
-        if (snapshot.hasData && snapshot.data == true) {
-          // User is logged in
+        // If the snapshot has data, it means we have a logged-in user.
+        if (snapshot.hasData) {
+          // User is logged in, show the main app shell.
           return AppShell(
-            isDarkMode: true,
+            isDarkMode:
+                true, // This should be managed by a theme provider later
             onThemeChanged: () {},
-            onLogout: _logout, // Pass the real logout function
+            // The logout function is now a simple call to Firebase Auth.
+            onLogout: () => FirebaseAuth.instance.signOut(),
           );
         }
 
-        // User is not logged in
+        // If the snapshot has no data, the user is logged out.
+        // Show the authentication screen.
         return AuthScreen(
-          onLoginSuccess: _checkSession, // Re-check session on login
+          // The onLoginSuccess callback is no longer needed because the
+          // StreamBuilder automatically handles rebuilding when the auth state changes.
+          onLoginSuccess: () {},
         );
       },
     );
