@@ -18,13 +18,13 @@ class PlotTwistsApp extends StatefulWidget {
 }
 
 class _PlotTwistsAppState extends State<PlotTwistsApp> {
-  bool _isDarkMode = true;
+  final bool _isDarkMode = true;
 
-  void _toggleTheme() {
-    setState(() {
-      _isDarkMode = !_isDarkMode;
-    });
-  }
+  // void _toggleTheme() {
+  //   setState(() {
+  //     _isDarkMode = !_isDarkMode;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
