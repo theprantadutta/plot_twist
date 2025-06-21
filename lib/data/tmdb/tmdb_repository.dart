@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../core/api_constants.dart';
+import '../local/persistence_service.dart';
 
 class TmdbRepository {
   final Dio _dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
@@ -100,6 +101,100 @@ class TmdbRepository {
     } catch (e) {
       print("Error fetching details for $type/$id: $e");
       return null;
+    }
+  }
+
+  // The main method for the Discover screen
+  Future<List<Map<String, dynamic>>> discoverMedia({
+    required MediaType type,
+    int page = 1,
+    String? sortBy,
+    List<int>? withGenres,
+  }) async {
+    try {
+      final queryParameters = {
+        ..._apiKeyParam,
+        'page': page,
+        if (sortBy != null) 'sort_by': sortBy,
+        if (withGenres != null && withGenres.isNotEmpty)
+          'with_genres': withGenres.join(','),
+      };
+      final response = await _dio.get(
+        '/discover/${type.name}',
+        queryParameters: queryParameters,
+      );
+      return List<Map<String, dynamic>>.from(response.data['results']);
+    } on DioException catch (e) {
+      print("Error discovering media: ${e.message}");
+      return [];
+    }
+  }
+
+  // Method for the real-time search bar
+  Future<List<Map<String, dynamic>>> searchMedia({
+    required MediaType type,
+    required String query,
+    int page = 1,
+  }) async {
+    try {
+      final queryParameters = {..._apiKeyParam, 'page': page, 'query': query};
+      final response = await _dio.get(
+        '/search/${type.name}',
+        queryParameters: queryParameters,
+      );
+      return List<Map<String, dynamic>>.from(response.data['results']);
+    } on DioException catch (e) {
+      print("Error searching media: ${e.message}");
+      return [];
+    }
+  }
+
+  // Method to get the official list of all genres
+  Future<List<Map<String, dynamic>>> getGenres(MediaType type) async {
+    try {
+      final response = await _dio.get(
+        '/genre/${type.name}/list',
+        queryParameters: _apiKeyParam,
+      );
+      return List<Map<String, dynamic>>.from(response.data['genres']);
+    } on DioException catch (e) {
+      print("Error fetching genres: ${e.message}");
+      return [];
+    }
+  }
+
+  // Method to get a list of currently popular actors/directors
+  Future<List<Map<String, dynamic>>> getPopularPeople() async {
+    try {
+      final response = await _dio.get(
+        '/person/popular',
+        queryParameters: _apiKeyParam,
+      );
+      return List<Map<String, dynamic>>.from(response.data['results']);
+    } on DioException catch (e) {
+      print("Error fetching popular people: ${e.message}");
+      return [];
+    }
+  }
+
+  // A versatile method to get a "deck" of movies for swiping
+  Future<List<Map<String, dynamic>>> getDiscoverDeck({int page = 1}) async {
+    try {
+      final queryParameters = {
+        ..._apiKeyParam,
+        'page': page,
+        'sort_by': 'popularity.desc', // A good default
+        'vote_count.gte': 100, // Filter out movies with very few votes
+        'watch_region': 'US', // Can be customized
+      };
+      final response = await _dio.get(
+        '/discover/movie',
+        queryParameters: queryParameters,
+      );
+      return List<Map<String, dynamic>>.from(response.data['results']);
+    } on DioException catch (e) {
+      print("Error fetching discover deck: ${e.message}");
+      return [];
     }
   }
 }

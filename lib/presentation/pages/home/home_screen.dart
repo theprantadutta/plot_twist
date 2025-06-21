@@ -4,9 +4,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../data/tmdb/tmdb_repository.dart';
+import '../../../application/discover/discover_providers.dart';
 import '../../../application/home/home_providers.dart';
 import '../../../data/local/persistence_service.dart';
 import '../../core/app_colors.dart';
+import '../search/search_screen.dart';
 import 'widgets/empty_watchlist_widget.dart';
 import 'widgets/media_type_toggle.dart';
 import 'widgets/movie_carousel_section.dart';
@@ -38,10 +40,23 @@ class HomeScreen extends ConsumerWidget {
         ),
         leadingWidth: 40,
         title: const Text("Home"),
-        actions: const [
-          Padding(
+        actions: [
+          // --- THIS IS THE CHANGE ---
+          IconButton(
+            icon: const Icon(Icons.search_rounded),
+            onPressed: () {
+              // Reset search query when opening the page
+              ref.read(searchQueryNotifierProvider.notifier).setQuery('');
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SearchScreen()));
+            },
+          ),
+          // ---------------------------
+          const SizedBox(width: 8),
+          const Padding(
             padding: EdgeInsets.only(right: 16.0),
-            child: MediaTypeToggle(), // Our new toggle widget
+            child: MediaTypeToggle(),
           ),
         ],
       ),
