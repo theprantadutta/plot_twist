@@ -11,16 +11,32 @@ class FirestoreService {
   // Generic method to add a media item to a specific list (e.g., 'watchlist', 'watched')
   Future<void> addToList(String listName, Map<String, dynamic> media) async {
     final userId = _userId;
-    if (userId == null) return; // Exit if no user is logged in
+    if (userId == null) return;
 
     final mediaId = media['id'].toString();
     final mediaType = media['title'] != null ? 'movie' : 'tv';
 
-    // Use a subcollection for the specified list
+    // --- NEW AND IMPROVED LOGIC ---
+
+    // If we are adding the item to the 'watched' list,
+    // we first ensure it's removed from the 'watchlist'.
+    if (listName == 'watched') {
+      await removeFromList('watchlist', mediaId);
+    }
+
+    // And "vice versa": if we are adding it back to the 'watchlist',
+    // it should be removed from the 'watched' list.
+    if (listName == 'watchlist') {
+      await removeFromList('watched', mediaId);
+    }
+
+    // --- END OF NEW LOGIC ---
+
+    // Now, proceed with adding the item to the target list.
     await _firestore
         .collection('users')
         .doc(userId)
-        .collection(listName) // 'watchlist' or 'watched'
+        .collection(listName)
         .doc(mediaId)
         .set({
           'tmdb_id': media['id'],
@@ -28,7 +44,7 @@ class FirestoreService {
           'title': media['title'] ?? media['name'],
           'poster_path': media['poster_path'],
           'added_at': FieldValue.serverTimestamp(),
-        });
+        }, SetOptions(merge: true)); // Use merge to avoid overwriting a rating
   }
 
   Future<void> removeFromList(String listName, String mediaId) async {
@@ -41,5 +57,106 @@ class FirestoreService {
         .collection(listName)
         .doc(mediaId)
         .delete();
+  }
+
+  Future<void> rateMedia(Map<String, dynamic> media, double rating) async {
+    final userId = _userId;
+    if (userId == null) return;
+
+    // Rating a movie automatically marks it as watched.
+    await addToList('watched', media);
+
+    final mediaId = media['id'].toString();
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('watched')
+        .doc(mediaId)
+        .update({'rating': rating});
+  }
+
+  Future<void> createCustomList(String listName, String description) async {
+    final userId = _userId;
+    if (userId == null) return;
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('custom_lists')
+        .add({
+          'name': listName,
+          'description': description,
+          'created_at': FieldValue.serverTimestamp(),
+        });
+  }
+
+  Future<void> addMediaToCustomList(
+    String listId,
+    Map<String, dynamic> media,
+  ) async {
+    final userId = _userId;
+    if (userId == null) return;
+    final mediaId = media['id'].toString();
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('custom_lists')
+        .doc(listId)
+        .collection('items')
+        .doc(mediaId)
+        .set({
+          'tmdb_id': media['id'],
+          'type': media['title'] != null ? 'movie' : 'tv',
+          'poster_path': media['poster_path'],
+          'added_at': FieldValue.serverTimestamp(),
+        });
+  }
+
+  Future<void> removeMediaFromCustomList(String listId, String mediaId) async {
+    final userId = _userId;
+    if (userId == null) return;
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('custom_lists')
+        .doc(listId)
+        .collection('items')
+        .doc(mediaId)
+        .delete();
+  }
+
+  // Deletes an entire custom list and all the items within it.
+  Future<void> deleteCustomList(String listId) async {
+    final userId = _userId;
+    if (userId == null) return;
+    final listRef = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('custom_lists')
+        .doc(listId);
+
+    // IMPORTANT: You must delete all items in the subcollection first.
+    final itemsSnapshot = await listRef.collection('items').get();
+    for (var doc in itemsSnapshot.docs) {
+      await doc.reference.delete();
+    }
+
+    // After the subcollection is empty, delete the main list document.
+    await listRef.delete();
+  }
+
+  Future<void> updateCustomList(
+    String listId,
+    String newName,
+    String newDescription,
+  ) async {
+    final userId = _userId;
+    if (userId == null) return;
+
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('custom_lists')
+        .doc(listId)
+        .update({'name': newName, 'description': newDescription});
   }
 }

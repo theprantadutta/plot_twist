@@ -197,4 +197,44 @@ class TmdbRepository {
       return [];
     }
   }
+
+  Future<Map<String, dynamic>?> fetchMediaDetails(int id, String type) async {
+    // Ensure type is either 'movie' or 'tv' to prevent invalid URLs
+    if (type != 'movie' && type != 'tv') return null;
+
+    try {
+      final response = await _dio.get(
+        '/$type/$id',
+        queryParameters: _apiKeyParam,
+      );
+      return response.data as Map<String, dynamic>;
+    } catch (e) {
+      print("Error fetching details for $type/$id: $e");
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> getMediaDetails({
+    required int id,
+    required MediaType type,
+  }) async {
+    // We request extra data all in one call for efficiency
+    const String appendToResponse =
+        'videos,credits,reviews,similar,external_ids';
+
+    try {
+      final response = await _dio.get(
+        '/${type.name}/$id',
+        queryParameters: {
+          ..._apiKeyParam,
+          'append_to_response': appendToResponse,
+        },
+      );
+      return response.data;
+    } on DioException catch (e) {
+      print("Error fetching media details: ${e.message}");
+      // Re-throw the exception so the UI layer can handle it
+      throw Exception('Failed to load media details');
+    }
+  }
 }

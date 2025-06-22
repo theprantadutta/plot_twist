@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../../../application/discover/discover_providers.dart';
 import '../../../../application/home/home_providers.dart';
+import '../../../../data/local/persistence_service.dart';
 import '../../home/widgets/poster_card.dart';
 import '../../home/widgets/shimmer_loaders.dart';
 
@@ -156,8 +157,18 @@ class _DiscoverGridState extends ConsumerState<DiscoverGrid> {
         if (item['poster_path'] == null) {
           return const SizedBox.shrink(); // Don't show items without posters
         }
-        final voteAverage = (item['vote_average'] as num?)?.toDouble() ?? 0.0;
+        final voteAverage = (item['vote_awesome'] as num?)?.toDouble() ?? 0.0;
+        final mediaId = item['id'] as int;
+
+        // Infer the media type. Some TMDB endpoints provide 'media_type',
+        // others don't. We can check for 'title' (movie) vs 'name' (TV) as a fallback.
+        final String typeString =
+            item['media_type'] ?? (item.containsKey('title') ? 'movie' : 'tv');
+        final mediaType = typeString == 'tv' ? MediaType.tv : MediaType.movie;
+
         return PosterCard(
+          mediaId: mediaId,
+          mediaType: mediaType,
           posterPath: item['poster_path'],
           voteAverage: voteAverage,
         );

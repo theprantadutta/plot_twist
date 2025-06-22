@@ -1,3 +1,4 @@
+// lib/presentation/pages/watchlist/watchlist_screen.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -19,8 +20,8 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Watch our final, filtered list provider
-    final watchlist = ref.watch(filteredWatchlistProvider);
+    // We now watch our new, powerful provider that returns full media details
+    final watchlistAsync = ref.watch(watchlistDetailsProvider);
     final currentFilter = ref.watch(watchlistFilterNotifierProvider);
     final notifier = ref.read(watchlistFilterNotifierProvider.notifier);
 
@@ -30,7 +31,6 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
         backgroundColor: AppColors.darkBackground,
         title: const Text("Watchlist"),
         actions: [
-          // The Edit/Done button
           TextButton(
             onPressed: () => setState(() => _isEditMode = !_isEditMode),
             child: Text(
@@ -42,7 +42,6 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
       ),
       body: Column(
         children: [
-          // The filter tabs
           Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 8.0,
@@ -53,9 +52,7 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
               backgroundColor: AppColors.darkSurface,
               thumbColor: AppColors.auroraPink,
               onValueChanged: (filter) {
-                if (filter != null) {
-                  notifier.setFilter(filter);
-                }
+                if (filter != null) notifier.setFilter(filter);
               },
               children: const {
                 WatchlistFilter.all: Padding(
@@ -73,68 +70,83 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
               },
             ),
           ),
-          // The grid of movies/shows
           Expanded(
-            child: watchlist.isEmpty
-                ? _buildEmptyState()
-                : GridView.builder(
-                    padding: const EdgeInsets.all(16),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 2 / 3,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                        ),
-                    itemCount: watchlist.length,
-                    itemBuilder: (context, index) {
-                      final doc = watchlist[index];
-                      // --- THIS IS THE FIX ---
-                      // Safely cast the data to a Map.
-                      final data = doc.data() as Map<String, dynamic>?;
+            child: watchlistAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(child: Text("Error: $err")),
+              data: (fullWatchlist) {
+                // Filter the already-fetched full details
+                final filteredList = fullWatchlist.where((item) {
+                  if (currentFilter == WatchlistFilter.all) return true;
+                  final typeString = currentFilter == WatchlistFilter.movies
+                      ? 'movie'
+                      : 'tv';
+                  // Check the media type based on whether it has a 'title' (movie) or 'name' (tv)
+                  return (typeString == 'movie')
+                      ? item.containsKey('title')
+                      : item.containsKey('name');
+                }).toList();
 
-                      // Check if data is null or if the poster_path is missing or not a String.
-                      if (data == null || data['poster_path'] is! String) {
-                        // If it's invalid, return an empty container to prevent crashing.
-                        return const SizedBox.shrink();
-                      }
+                if (filteredList.isEmpty) {
+                  return _buildEmptyState(
+                    isFilterActive: currentFilter != WatchlistFilter.all,
+                  );
+                }
 
-                      // Now we know poster_path exists and is a String.
-                      return WatchlistItemCard(
-                            mediaId: doc.id,
-                            posterPath: data['poster_path'],
-                            isEditMode: _isEditMode,
-                          )
-                          .animate()
-                          .fadeIn(delay: (50 * index).ms)
-                          .scale(begin: const Offset(0.9, 0.9));
-                    },
+                return GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 2 / 3,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
                   ),
+                  itemCount: filteredList.length,
+                  itemBuilder: (context, index) {
+                    final item = filteredList[index];
+
+                    // Now we are 100% sure that poster_path exists and is a String
+                    return WatchlistItemCard(
+                          mediaId: item['id'].toString(),
+                          posterPath: item['poster_path'],
+                          isEditMode: _isEditMode,
+                        )
+                        .animate()
+                        .fadeIn(delay: (50 * index).ms)
+                        .scale(begin: const Offset(0.9, 0.9));
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState({bool isFilterActive = false}) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.bookmark_border_rounded,
+          Icon(
+            isFilterActive
+                ? Icons.filter_list_off_rounded
+                : Icons.bookmark_border_rounded,
             size: 80,
             color: Colors.white24,
           ),
           const SizedBox(height: 16),
-          const Text(
-            "Your Watchlist is Empty",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Text(
+            isFilterActive ? "No Results Found" : "Your Watchlist is Empty",
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          const Text(
-            "Add movies and shows to see them here.",
-            style: TextStyle(color: Colors.white70),
+          Text(
+            isFilterActive
+                ? "No items in your watchlist match this filter."
+                : "Add movies and shows to see them here.",
+            style: const TextStyle(color: Colors.white70),
             textAlign: TextAlign.center,
           ),
         ],
