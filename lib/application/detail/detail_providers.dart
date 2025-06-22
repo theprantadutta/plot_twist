@@ -12,6 +12,9 @@ part 'detail_providers.g.dart';
 // A record to pass both id and type, making it type-safe
 typedef MediaIdentifier = ({int id, MediaType type});
 
+// A new record to pass both tvId and season number
+typedef SeasonIdentifier = ({int tvId, int seasonNumber});
+
 // This provider fetches the full details for a specific movie or show
 @riverpod
 Future<Map<String, dynamic>> mediaDetails(Ref ref, MediaIdentifier media) {
@@ -94,4 +97,16 @@ Stream<bool> isMediaInCustomList(
       .doc(mediaId.toString());
 
   return docRef.snapshots().map((snapshot) => snapshot.exists);
+}
+
+@riverpod
+Future<Map<String, dynamic>> seasonDetails(
+  SeasonDetailsRef ref,
+  SeasonIdentifier season,
+) {
+  final repo = ref.watch(tmdbRepositoryProvider);
+  return repo.getSeasonDetails(
+    tvId: season.tvId,
+    seasonNumber: season.seasonNumber,
+  );
 }

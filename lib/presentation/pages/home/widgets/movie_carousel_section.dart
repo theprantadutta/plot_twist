@@ -10,12 +10,14 @@ class MovieCarouselSection extends StatelessWidget {
   final String title;
   final Future<List<Map<String, dynamic>>> future;
   final Widget? onEmptyWidget;
+  final MediaType? mediaTypeFilter; // <-- ADD THIS OPTIONAL FILTER
 
   const MovieCarouselSection({
     super.key,
     required this.title,
     required this.future,
     this.onEmptyWidget,
+    this.mediaTypeFilter, // <-- ADD TO CONSTRUCTOR
   });
 
   @override
@@ -51,23 +53,44 @@ class MovieCarouselSection extends StatelessWidget {
                     );
               }
 
-              final items = snapshot.data!;
+              List<Map<String, dynamic>> items = snapshot.data!;
+
+              // --- THIS IS THE NEW FILTERING LOGIC ---
+              if (mediaTypeFilter != null) {
+                items = items.where((item) {
+                  final typeString =
+                      item['media_type'] ??
+                      (item.containsKey('title') ? 'movie' : 'tv');
+                  return typeString == mediaTypeFilter!.name;
+                }).toList();
+              }
+              // ----------------------------------------
+
+              // If the list is empty *after* filtering
+              if (items.isEmpty) {
+                return onEmptyWidget ??
+                    const Center(
+                      child: Text(
+                        "No items found.",
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                    );
+              }
+
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   final item = items[index];
-                  if (item['poster_path'] == null)
+                  if (item['poster_path'] == null || item['id'] == null) {
                     return const SizedBox.shrink();
+                  }
 
                   final voteAverage =
-                      (item['vote_awesome'] as num?)?.toDouble() ?? 0.0;
+                      (item['vote_average'] as num?)?.toDouble() ?? 0.0;
                   final mediaId = item['id'] as int;
-
-                  // Infer the media type. Some TMDB endpoints provide 'media_type',
-                  // others don't. We can check for 'title' (movie) vs 'name' (TV) as a fallback.
-                  final String typeString =
+                  final typeString =
                       item['media_type'] ??
                       (item.containsKey('title') ? 'movie' : 'tv');
                   final mediaType = typeString == 'tv'
@@ -80,7 +103,6 @@ class MovieCarouselSection extends StatelessWidget {
                     posterPath: item['poster_path'],
                     voteAverage: voteAverage,
                   );
-                  // ---------------------------
                 },
               );
             },

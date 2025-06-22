@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../data/local/persistence_service.dart';
 import '../../../core/app_colors.dart';
 import '../../detail/movie_detail_screen.dart';
+import '../../detail/tv_show_detail_screen.dart';
 
 class PosterCard extends StatelessWidget {
   // --- NEW PROPERTIES ---
@@ -39,12 +40,13 @@ class PosterCard extends StatelessWidget {
       onTap: () {
         // --- THIS IS THE FIX ---
         // Now it correctly uses the passed-in properties to navigate.
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) =>
-                MovieDetailScreen(mediaId: mediaId, mediaType: mediaType),
-          ),
-        );
+        Widget screen;
+        if (mediaType == MediaType.movie) {
+          screen = MovieDetailScreen(mediaId: mediaId);
+        } else {
+          screen = TvShowDetailScreen(mediaId: mediaId);
+        }
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
       },
       child: Stack(
         children: [

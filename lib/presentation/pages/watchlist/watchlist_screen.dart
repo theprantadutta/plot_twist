@@ -1,4 +1,3 @@
-// lib/presentation/pages/watchlist/watchlist_screen.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -6,21 +5,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../application/watchlist/watchlist_providers.dart';
 import '../../core/app_colors.dart';
-import 'widgets/watchlist_item_card.dart';
+import 'full_watchlist_screen.dart';
+import 'widgets/watchlist_item_tile.dart';
+import 'widgets/watchlist_stats_component.dart';
 
-class WatchlistScreen extends ConsumerStatefulWidget {
+class WatchlistScreen extends ConsumerWidget {
   const WatchlistScreen({super.key});
 
   @override
-  ConsumerState<WatchlistScreen> createState() => _WatchlistScreenState();
-}
-
-class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
-  bool _isEditMode = false;
-
-  @override
-  Widget build(BuildContext context) {
-    // We now watch our new, powerful provider that returns full media details
+  Widget build(BuildContext context, WidgetRef ref) {
     final watchlistAsync = ref.watch(watchlistDetailsProvider);
     final currentFilter = ref.watch(watchlistFilterNotifierProvider);
     final notifier = ref.read(watchlistFilterNotifierProvider.notifier);
@@ -31,126 +24,118 @@ class _WatchlistScreenState extends ConsumerState<WatchlistScreen> {
         backgroundColor: AppColors.darkBackground,
         title: const Text("Watchlist"),
         actions: [
-          TextButton(
-            onPressed: () => setState(() => _isEditMode = !_isEditMode),
-            child: Text(
-              _isEditMode ? "Done" : "Edit",
-              style: const TextStyle(color: AppColors.auroraPink, fontSize: 16),
-            ),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
           Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 8.0,
-              horizontal: 16.0,
-            ),
+            padding: const EdgeInsets.only(right: 16.0),
             child: CupertinoSlidingSegmentedControl<WatchlistFilter>(
               groupValue: currentFilter,
               backgroundColor: AppColors.darkSurface,
               thumbColor: AppColors.auroraPink,
-              onValueChanged: (filter) {
-                if (filter != null) notifier.setFilter(filter);
-              },
+              onValueChanged: (filter) =>
+                  filter != null ? notifier.setFilter(filter) : null,
               children: const {
                 WatchlistFilter.all: Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text("All"),
                 ),
                 WatchlistFilter.movies: Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text("Movies"),
                 ),
                 WatchlistFilter.tvShows: Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text("TV Shows"),
                 ),
               },
             ),
           ),
-          Expanded(
-            child: watchlistAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text("Error: $err")),
-              data: (fullWatchlist) {
-                // Filter the already-fetched full details
-                final filteredList = fullWatchlist.where((item) {
-                  if (currentFilter == WatchlistFilter.all) return true;
-                  final typeString = currentFilter == WatchlistFilter.movies
-                      ? 'movie'
-                      : 'tv';
-                  // Check the media type based on whether it has a 'title' (movie) or 'name' (tv)
-                  return (typeString == 'movie')
-                      ? item.containsKey('title')
-                      : item.containsKey('name');
-                }).toList();
-
-                if (filteredList.isEmpty) {
-                  return _buildEmptyState(
-                    isFilterActive: currentFilter != WatchlistFilter.all,
-                  );
-                }
-
-                return GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 2 / 3,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                  ),
-                  itemCount: filteredList.length,
-                  itemBuilder: (context, index) {
-                    final item = filteredList[index];
-
-                    // Now we are 100% sure that poster_path exists and is a String
-                    return WatchlistItemCard(
-                          mediaId: item['id'].toString(),
-                          posterPath: item['poster_path'],
-                          isEditMode: _isEditMode,
-                        )
-                        .animate()
-                        .fadeIn(delay: (50 * index).ms)
-                        .scale(begin: const Offset(0.9, 0.9));
-                  },
-                );
-              },
-            ),
-          ),
         ],
       ),
-    );
-  }
+      body: watchlistAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text("Error: $err")),
+        data: (fullList) {
+          // Apply the same filtering logic for the preview list
+          final filteredList = fullList.where((item) {
+            if (currentFilter == WatchlistFilter.all) return true;
+            final isMovie = item.containsKey('title');
+            if (currentFilter == WatchlistFilter.movies) return isMovie;
+            if (currentFilter == WatchlistFilter.tvShows) return !isMovie;
+            return false;
+          }).toList();
 
-  Widget _buildEmptyState({bool isFilterActive = false}) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            isFilterActive
-                ? Icons.filter_list_off_rounded
-                : Icons.bookmark_border_rounded,
-            size: 80,
-            color: Colors.white24,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            isFilterActive ? "No Results Found" : "Your Watchlist is Empty",
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            isFilterActive
-                ? "No items in your watchlist match this filter."
-                : "Add movies and shows to see them here.",
-            style: const TextStyle(color: Colors.white70),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ).animate().fadeIn(duration: 400.ms),
+          return ListView(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            children: [
+              // 1. Statistics Section
+              const WatchlistStatsComponent(),
+
+              const SizedBox(height: 32),
+
+              // 2. Watch Next Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Watch Next",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    // Only show "View All" if there are more items than the preview shows
+                    if (filteredList.length > 5)
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const FullWatchlistScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "View All",
+                          style: TextStyle(
+                            color: AppColors.auroraPink,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              if (filteredList.isEmpty)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(32.0),
+                    child: Text(
+                      "Add items to your watchlist!",
+                      style: TextStyle(
+                        color: AppColors.darkTextSecondary,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                // Build the list of tiles, showing a max of 5 items for the preview
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: filteredList.length > 5 ? 5 : filteredList.length,
+                  itemBuilder: (context, index) {
+                    final item = filteredList[index];
+                    return WatchlistItemTile(item: item);
+                  },
+                ),
+            ],
+          ).animate().fadeIn();
+        },
+      ),
     );
   }
 }

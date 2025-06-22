@@ -39,6 +39,10 @@ class TmdbRepository {
       _fetchMediaList('/trending/tv/day');
   Future<List<Map<String, dynamic>>> getTopRatedMovies() =>
       _fetchMediaList('/movie/top_rated');
+  Future<List<Map<String, dynamic>>> getTrendingMoviesWeek() =>
+      _fetchMediaList('/trending/movie/week');
+  Future<List<Map<String, dynamic>>> getTrendingTvShowsWeek() =>
+      _fetchMediaList('/trending/tv/week');
 
   // --- Methods for Personalized Data ---
 
@@ -235,6 +239,22 @@ class TmdbRepository {
       print("Error fetching media details: ${e.message}");
       // Re-throw the exception so the UI layer can handle it
       throw Exception('Failed to load media details');
+    }
+  }
+
+  Future<Map<String, dynamic>> getSeasonDetails({
+    required int tvId,
+    required int seasonNumber,
+  }) async {
+    try {
+      final response = await _dio.get(
+        '/tv/$tvId/season/$seasonNumber',
+        queryParameters: _apiKeyParam,
+      );
+      return response.data;
+    } on DioException catch (e) {
+      print("Error fetching season details: ${e.message}");
+      throw Exception('Failed to load season details');
     }
   }
 }

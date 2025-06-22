@@ -1,5 +1,6 @@
 import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -29,7 +30,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       const Duration(milliseconds: 500),
       initialValue: '',
       onChanged: (query) {
-        ref.read(searchQueryNotifierProvider.notifier).setQuery(query);
+        if (mounted) {
+          ref.read(searchQueryNotifierProvider.notifier).setQuery(query);
+        }
       },
     );
   }
@@ -98,17 +101,17 @@ class _SearchResultsGridState extends ConsumerState<SearchResultsGrid> {
   }
 
   void _resetAndFetch() {
-    // Check if the widget is still in the tree before calling setState
-    if (mounted) {
-      setState(() {
-        _items = [];
-        _page = 1;
-      });
-      // We use addPostFrameCallback to ensure the state reset has completed before fetching
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    // --- THIS IS PART OF THE FIX ---
+    // Schedule the state reset and fetch to happen *after* the current build is finished.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _items = [];
+          _page = 1;
+        });
         _fetchData();
-      });
-    }
+      }
+    });
   }
 
   Future<void> _fetchData({bool isLoadMore = false}) async {
@@ -151,11 +154,9 @@ class _SearchResultsGridState extends ConsumerState<SearchResultsGrid> {
 
   @override
   Widget build(BuildContext context) {
-    // --- THIS IS THE FIX ---
     // The listeners are now correctly placed inside the build method.
     ref.listen(searchQueryNotifierProvider, (_, __) => _resetAndFetch());
     ref.listen(mediaTypeNotifierProvider, (_, __) => _resetAndFetch());
-    // ----------------------
 
     final query = ref.watch(searchQueryNotifierProvider);
 

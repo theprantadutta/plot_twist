@@ -94,15 +94,17 @@ class HomeScreen extends ConsumerWidget {
             // All carousels now conditionally fetch data
             MovieCarouselSection(
               title: "Your Watchlist",
-              future: tmdbRepository
-                  .getWatchlist(), // Watchlist can contain both types
+              future: tmdbRepository.getWatchlist(), // Fetches both types
               onEmptyWidget: const EmptyWatchlistWidget(),
+              mediaTypeFilter: selectedType, // <-- We now pass the filter here
             ),
             const SizedBox(height: 16),
             MovieCarouselSection(
               title: "Trending This Week",
-              future: tmdbRepository
-                  .getTrendingAllWeek(), // 'all' includes both
+              // Use a ternary operator to call the correct new method
+              future: selectedType == MediaType.movie
+                  ? tmdbRepository.getTrendingMoviesWeek()
+                  : tmdbRepository.getTrendingTvShowsWeek(),
             ),
             const SizedBox(height: 16),
             MovieCarouselSection(
