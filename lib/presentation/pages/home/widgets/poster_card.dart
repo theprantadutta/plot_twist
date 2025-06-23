@@ -8,18 +8,16 @@ import '../../detail/movie_detail_screen.dart';
 import '../../detail/tv_show_detail_screen.dart';
 
 class PosterCard extends StatelessWidget {
-  // --- NEW PROPERTIES ---
   final int mediaId;
   final MediaType mediaType;
-  // --------------------
 
   final String posterPath;
   final double voteAverage;
 
   const PosterCard({
     super.key,
-    required this.mediaId, // <-- ADD TO CONSTRUCTOR
-    required this.mediaType, // <-- ADD TO CONSTRUCTOR
+    required this.mediaId,
+    required this.mediaType,
     required this.posterPath,
     required this.voteAverage,
   });
@@ -38,7 +36,6 @@ class PosterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // --- THIS IS THE FIX ---
         // Now it correctly uses the passed-in properties to navigate.
         Widget screen;
         if (mediaType == MediaType.movie) {

@@ -70,8 +70,14 @@ class DetailHeader extends StatelessWidget {
           // --- THE NEW PLAY BUTTON ---
           // It will only build if the onPlayTrailer callback exists
           if (onPlayTrailer != null)
-            Align(
-              alignment: Alignment.bottomRight,
+            Positioned(
+              // alignment: Alignment.topRight,
+              left:
+                  24 +
+                  (collapseProgress * 16), // Adjust position based on progress
+              bottom:
+                  54 +
+                  (collapseProgress * 16), // Adjust position based on progress
               // The button fades out as the user scrolls (as progress increases)
               child: Opacity(
                 opacity: 1.0 - collapseProgress,

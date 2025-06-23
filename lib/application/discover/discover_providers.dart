@@ -22,7 +22,7 @@ class DiscoverDeck extends _$DiscoverDeck {
   // It's called after a swipe in any direction.
   void cardSwiped(Map<String, dynamic> media) {
     state = AsyncData(state.value!..removeWhere((m) => m['id'] == media['id']));
-    _fetchMoreIfneeded();
+    fetchMore();
   }
 
   void undoSwipe(Map<String, dynamic> movie, int index) {
@@ -31,15 +31,18 @@ class DiscoverDeck extends _$DiscoverDeck {
     state = AsyncData(currentList);
   }
 
-  // Helper to fetch more cards when the deck runs low
-  Future<void> _fetchMoreIfneeded() async {
-    if (state.value != null && state.value!.length < 5) {
-      _page++;
-      final repo = ref.read(tmdbRepositoryProvider);
-      final newItems = await repo.getDiscoverDeck(page: _page);
-      // Add the new items to the existing list
-      state = AsyncData(state.value!..addAll(newItems));
-    }
+  // and adds the new movies to the end of our existing list.
+  Future<void> fetchMore() async {
+    // Prevent multiple fetches at the same time
+    if (state is AsyncLoading) return;
+
+    _page++;
+    final repo = ref.read(tmdbRepositoryProvider);
+    final newItems = await repo.getDiscoverDeck(page: _page);
+
+    // Create a new list with the old items and the new items
+    final currentItems = state.value ?? [];
+    state = AsyncData([...currentItems, ...newItems]);
   }
 }
 

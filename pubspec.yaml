@@ -33,6 +33,8 @@ dependencies:
   firebase_storage: ^12.4.7
   package_info_plus: ^8.3.0
   flutter_markdown_plus: ^1.0.3
+  card_swiper: ^3.0.1
+  flutter_card_swiper: ^7.0.2
 
 dev_dependencies:
   flutter_test:

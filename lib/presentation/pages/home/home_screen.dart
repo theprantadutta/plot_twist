@@ -83,8 +83,10 @@ class HomeScreen extends ConsumerWidget {
                   final items = snapshot.data!;
                   return PageView.builder(
                     itemCount: items.length > 5 ? 5 : items.length,
-                    itemBuilder: (context, index) =>
-                        SpotlightCard(movie: items[index]),
+                    itemBuilder: (context, index) => SpotlightCard(
+                      movie: items[index],
+                      mediaType: selectedType,
+                    ),
                   );
                 },
               ),
@@ -123,7 +125,7 @@ class HomeScreen extends ConsumerWidget {
                 future: tmdbRepository.getUpcomingMovies(),
               ),
             ],
-            const SizedBox(height: 100),
+            const SizedBox(height: 20),
           ],
         ),
       ).animate().fadeIn(duration: 600.ms),
