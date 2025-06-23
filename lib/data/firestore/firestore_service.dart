@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   // Helper method to get the current user ID
   String? get _userId => _auth.currentUser?.uid;
@@ -158,5 +162,47 @@ class FirestoreService {
         .collection('custom_lists')
         .doc(listId)
         .update({'name': newName, 'description': newDescription});
+  }
+
+  Future<String?> uploadAvatar(File imageFile) async {
+    final userId = _userId;
+    if (userId == null) return null;
+
+    try {
+      // Create a reference to the location you want to upload to in Firebase Storage
+      final ref = _storage.ref().child('avatars/$userId.jpg');
+
+      // Upload the file
+      final uploadTask = await ref.putFile(imageFile);
+
+      // Get the download URL
+      final downloadUrl = await uploadTask.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print("Failed to upload avatar: $e");
+      return null;
+    }
+  }
+
+  // We now accept an optional avatarUrl
+  Future<void> updateUserProfile({
+    required String fullName,
+    required String username,
+    String? avatarUrl,
+  }) async {
+    final userId = _userId;
+    if (userId == null) return;
+
+    final Map<String, dynamic> dataToUpdate = {
+      'fullName': fullName,
+      'username': username,
+    };
+
+    // Only add the avatarUrl to the update map if it's not null
+    if (avatarUrl != null) {
+      dataToUpdate['avatarUrl'] = avatarUrl;
+    }
+
+    await _firestore.collection('users').doc(userId).update(dataToUpdate);
   }
 }

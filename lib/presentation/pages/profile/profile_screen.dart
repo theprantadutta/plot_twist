@@ -52,21 +52,35 @@ class ProfileScreen extends ConsumerWidget {
               // User Info Header
               userAsync.when(
                 data: (doc) {
+                  final data = doc.data();
+                  // Get the avatar URL from the document data
+                  final avatarUrl = data?['avatarUrl'];
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
                       children: [
-                        const CircleAvatar(
+                        // --- THIS IS THE UPDATED WIDGET ---
+                        CircleAvatar(
                           radius: 50,
                           backgroundColor: AppColors.darkSurface,
-                          child: FaIcon(
-                            FontAwesomeIcons.userAstronaut,
-                            size: 40,
-                          ),
+                          // Use the NetworkImage if the URL exists
+                          backgroundImage: avatarUrl != null
+                              ? NetworkImage(avatarUrl)
+                              : null,
+                          // The child (icon) is only shown if there is no background image
+                          child: avatarUrl == null
+                              ? const FaIcon(
+                                  FontAwesomeIcons.userAstronaut,
+                                  size: 40,
+                                  color: AppColors.darkTextSecondary,
+                                )
+                              : null,
                         ),
+                        // ------------------------------------
                         const SizedBox(height: 16),
                         Text(
-                          doc.data()?['fullName'] ?? 'PlotTwists User',
+                          data?['fullName'] ?? 'PlotTwists User',
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -74,7 +88,7 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          doc.data()?['email'] ?? '',
+                          data?['email'] ?? '',
                           style: const TextStyle(
                             fontSize: 16,
                             color: AppColors.darkTextSecondary,

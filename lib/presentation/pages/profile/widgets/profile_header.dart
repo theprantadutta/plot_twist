@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../application/profile/profile_providers.dart';
 import '../../../core/app_colors.dart';
@@ -9,7 +10,6 @@ class ProfileHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch the user document stream provider
     final userDocAsync = ref.watch(userDocumentStreamProvider);
 
     return userDocAsync.when(
@@ -17,21 +17,28 @@ class ProfileHeader extends ConsumerWidget {
         final data = doc.data();
         final fullName = data?['fullName'] ?? 'PlotTwists User';
         final username = data?['username'] ?? 'username';
+        final avatarUrl = data?['avatarUrl']; // Get the avatar URL
 
         return Container(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 48),
           width: double.infinity,
           decoration: const BoxDecoration(gradient: AppColors.auroraGradient),
           child: Column(
             children: [
-              const CircleAvatar(
+              // Updated Avatar Logic
+              CircleAvatar(
                 radius: 50,
                 backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.person,
-                  size: 50,
-                  color: AppColors.auroraPurple,
-                ),
+                backgroundImage: avatarUrl != null
+                    ? NetworkImage(avatarUrl)
+                    : null,
+                child: avatarUrl == null
+                    ? const FaIcon(
+                        FontAwesomeIcons.userAstronaut,
+                        size: 50,
+                        color: AppColors.auroraPurple,
+                      )
+                    : null,
               ),
               const SizedBox(height: 16),
               Text(
@@ -55,7 +62,7 @@ class ProfileHeader extends ConsumerWidget {
         );
       },
       loading: () => const SizedBox(
-        height: 200,
+        height: 234,
         child: Center(child: CircularProgressIndicator()),
       ),
       error: (err, stack) =>

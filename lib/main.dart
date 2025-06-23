@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plot_twist/presentation/core/auth_guard.dart';
 
 import 'application/home/home_providers.dart';
+import 'application/settings/appearance_provider.dart';
 import 'data/local/persistence_service.dart';
 import 'firebase_options.dart';
 import 'presentation/core/app_colors.dart';
@@ -27,31 +28,21 @@ Future<void> main() async {
   );
 }
 
-class PlotTwistsApp extends StatefulWidget {
+class PlotTwistsApp extends ConsumerWidget {
   const PlotTwistsApp({super.key});
 
   @override
-  State<PlotTwistsApp> createState() => _PlotTwistsAppState();
-}
-
-class _PlotTwistsAppState extends State<PlotTwistsApp> {
-  final bool _isDarkMode = true;
-
-  // void _toggleTheme() {
-  //   setState(() {
-  //     _isDarkMode = !_isDarkMode;
-  //   });
-  // }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Theme definitions remain here as they are an app-level concern.
+    final appearanceState = ref.watch(appearanceNotifierProvider);
     final darkTheme = ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppColors.darkBackground,
-      primaryColor: AppColors.auroraPink,
-      colorScheme: const ColorScheme.dark(
-        primary: AppColors.auroraPink,
+      scaffoldBackgroundColor: appearanceState.useTrueBlack
+          ? Colors.black
+          : AppColors.darkBackground,
+      primaryColor: appearanceState.accentColor, // Dynamic Accent Color
+      colorScheme: ColorScheme.dark(
+        primary: appearanceState.accentColor, // Dynamic Accent Color
         secondary: AppColors.auroraPurple,
         surface: AppColors.darkSurface,
         onPrimary: AppColors.darkTextPrimary,
@@ -85,9 +76,9 @@ class _PlotTwistsAppState extends State<PlotTwistsApp> {
     final lightTheme = ThemeData(
       brightness: Brightness.light,
       scaffoldBackgroundColor: AppColors.lightBackground,
-      primaryColor: AppColors.auroraPink,
-      colorScheme: const ColorScheme.light(
-        primary: AppColors.auroraPink,
+      primaryColor: appearanceState.accentColor, // Dynamic Accent Color
+      colorScheme: ColorScheme.light(
+        primary: appearanceState.accentColor, // Dynamic Accent Color
         secondary: AppColors.auroraPurple,
         surface: AppColors.lightSurface,
         onPrimary: Colors.white,
@@ -122,7 +113,7 @@ class _PlotTwistsAppState extends State<PlotTwistsApp> {
       title: 'Plot Twists',
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: appearanceState.themeMode,
       debugShowCheckedModeBanner: false,
       // home: AppShell(isDarkMode: _isDarkMode, onThemeChanged: _toggleTheme),
       home: AuthGuard(),
