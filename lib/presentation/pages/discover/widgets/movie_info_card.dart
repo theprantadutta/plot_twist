@@ -204,7 +204,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../data/local/persistence_service.dart';
 import '../../../core/app_colors.dart';
+import '../../detail/movie_detail_screen.dart';
+import '../../detail/tv_show_detail_screen.dart';
 
 class MovieInfoCard extends StatelessWidget {
   final Map<String, dynamic> movie;
@@ -224,122 +227,140 @@ class MovieInfoCard extends StatelessWidget {
         movie['first_air_date']?.substring(0, 4) ??
         'N/A';
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        color: AppColors.darkSurface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 25,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            if (backdropPath != null)
-              Image.network(
-                'https://image.tmdb.org/t/p/w1280$backdropPath',
-                fit: BoxFit.cover,
-              ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.transparent,
-                    AppColors.darkBackground.withOpacity(0.9),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [0.5, 1],
-                ),
-              ),
-            ),
-            // The overlay logic is removed, simplifying the widget
-            Positioned(
-              bottom: 24,
-              left: 24,
-              right: 24,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      if (posterPath != null)
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            'https://image.tmdb.org/t/p/w500$posterPath',
-                            height: 150,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              title,
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "Action, Comedy, Drama",
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.7),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      const FaIcon(
-                        FontAwesomeIcons.solidStar,
-                        color: Colors.amber,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        voteAverage.toStringAsFixed(1),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(width: 16),
-                      const FaIcon(
-                        FontAwesomeIcons.solidCalendar,
-                        color: Colors.white70,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(releaseYear),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    overview,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                  ),
-                ],
-              ),
+    return GestureDetector(
+      onTap: () {
+        // Now it correctly uses the passed-in properties to navigate.
+        Widget screen;
+        final mediaId = movie['id'] as int;
+        print('Navigating to details for media ID: $mediaId');
+        final String typeString =
+            movie['media_type'] ??
+            (movie.containsKey('title') ? 'movie' : 'tv');
+        final mediaType = typeString == 'tv' ? MediaType.tv : MediaType.movie;
+        if (mediaType == MediaType.movie) {
+          screen = MovieDetailScreen(mediaId: mediaId);
+        } else {
+          screen = TvShowDetailScreen(mediaId: mediaId);
+        }
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          color: AppColors.darkSurface,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 25,
+              offset: const Offset(0, 10),
             ),
           ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              if (backdropPath != null)
+                Image.network(
+                  'https://image.tmdb.org/t/p/w1280$backdropPath',
+                  fit: BoxFit.cover,
+                ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.transparent,
+                      AppColors.darkBackground.withOpacity(0.9),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: const [0.5, 1],
+                  ),
+                ),
+              ),
+              // The overlay logic is removed, simplifying the widget
+              Positioned(
+                bottom: 24,
+                left: 24,
+                right: 24,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        if (posterPath != null)
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              'https://image.tmdb.org/t/p/w500$posterPath',
+                              height: 150,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                title,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Action, Comedy, Drama",
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.7),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        const FaIcon(
+                          FontAwesomeIcons.solidStar,
+                          color: Colors.amber,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          voteAverage.toStringAsFixed(1),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 16),
+                        const FaIcon(
+                          FontAwesomeIcons.solidCalendar,
+                          color: Colors.white70,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(releaseYear),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      overview,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

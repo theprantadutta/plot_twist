@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../data/firestore/firestore_service.dart';
 import '../../../core/app_colors.dart';
+import 'watchlist_item_action_sheet.dart';
 
 class WatchlistItemTile extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -18,9 +18,7 @@ class WatchlistItemTile extends StatelessWidget {
     final posterPath = item['poster_path'];
     final title = item['title'] ?? item['name'] ?? 'Untitled';
     final voteAverage = (item['vote_average'] as num?)?.toDouble() ?? 0.0;
-    final runtime =
-        item['runtime']
-            as int?; // This might be null for TV shows on first fetch
+    final runtime = item['runtime'] as int?;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -44,11 +42,14 @@ class WatchlistItemTile extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     const FaIcon(
@@ -79,19 +80,15 @@ class WatchlistItemTile extends StatelessWidget {
               ],
             ),
           ),
-          // Action Button
+          // --- THE NEW "MORE" BUTTON ---
           IconButton(
-            icon: const CircleAvatar(
-              backgroundColor: AppColors.darkSuccessGreen,
-              radius: 14,
-              child: Icon(Icons.check, color: AppColors.darkSurface, size: 16),
+            icon: const Icon(
+              Icons.more_vert,
+              color: AppColors.darkTextSecondary,
             ),
             onPressed: () {
-              // On tap, move from watchlist to watched
-              FirestoreService().addToList('watched', item);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Moved '$title' to Watched")),
-              );
+              // On tap, open our new action sheet
+              showWatchlistItemActionSheet(context, item);
             },
           ),
         ],

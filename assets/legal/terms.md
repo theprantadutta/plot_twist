@@ -39,4 +39,4 @@ We reserve the right, at our sole discretion, to modify or replace these Terms a
 
 ## **6\. Contact Us**
 
-If you have any questions about these Terms, please contact us at: support@plottwists.app
+If you have any questions about these Terms, please contact us at: prantadutta1997@gmail.com

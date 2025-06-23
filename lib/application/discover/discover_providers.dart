@@ -11,18 +11,33 @@ part 'discover_providers.g.dart';
 class DiscoverDeck extends _$DiscoverDeck {
   int _page = 1;
 
+  // The build method now depends on the mediaTypeNotifierProvider.
+  // When the toggle changes, Riverpod will automatically re-run this method.
   @override
   Future<List<Map<String, dynamic>>> build() async {
     _page = 1;
     final repo = ref.read(tmdbRepositoryProvider);
-    return repo.getDiscoverDeck(page: _page);
+    // Get the currently selected media type from the toggle
+    final mediaType = ref.watch(mediaTypeNotifierProvider);
+    // Fetch the correct type of deck
+    return repo.getDiscoverDeck(type: mediaType, page: _page);
   }
 
   // This method simply removes the card from the current UI state.
   // It's called after a swipe in any direction.
+  // void cardSwiped(Map<String, dynamic> media) {
+  //   state = AsyncData(state.value!..removeWhere((m) => m['id'] == media['id']));
+  //   fetchMore();
+  // }
   void cardSwiped(Map<String, dynamic> media) {
-    state = AsyncData(state.value!..removeWhere((m) => m['id'] == media['id']));
+    // This logic doesn't need to change
+    final currentItems = state.value ?? [];
+    currentItems.removeWhere((m) => m['id'] == media['id']);
+    state = AsyncData([
+      ...currentItems,
+    ]); // Create a new list to notify listeners
     fetchMore();
+    // Note: The proactive fetch logic is now handled in the UI
   }
 
   void undoSwipe(Map<String, dynamic> movie, int index) {
@@ -33,14 +48,14 @@ class DiscoverDeck extends _$DiscoverDeck {
 
   // and adds the new movies to the end of our existing list.
   Future<void> fetchMore() async {
-    // Prevent multiple fetches at the same time
     if (state is AsyncLoading) return;
 
     _page++;
     final repo = ref.read(tmdbRepositoryProvider);
-    final newItems = await repo.getDiscoverDeck(page: _page);
+    // Also use the mediaType when fetching more pages
+    final mediaType = ref.read(mediaTypeNotifierProvider);
+    final newItems = await repo.getDiscoverDeck(type: mediaType, page: _page);
 
-    // Create a new list with the old items and the new items
     final currentItems = state.value ?? [];
     state = AsyncData([...currentItems, ...newItems]);
   }

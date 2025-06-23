@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../application/detail/detail_providers.dart';
 import '../../../data/local/persistence_service.dart';
 import '../../core/app_colors.dart';
+import '../../core/widgets/error_display_widget.dart';
 import '../home/widgets/poster_card.dart';
-import 'movie_detail_screen.dart'; // For VideoPlayerScreen
+import 'movie_detail_screen.dart';
 import 'widgets/action_button_bar.dart';
 import 'widgets/cast_and_crew_section.dart';
 import 'widgets/detail_header.dart';
+import 'widgets/detail_screen_shimmer.dart';
 import 'widgets/detail_tab_bar.dart';
 import 'widgets/info_panel.dart';
 import 'widgets/season_card.dart';
@@ -47,10 +49,12 @@ class TvShowDetailScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
       body: detailsAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.auroraPink),
+        loading: () => const DetailScreenShimmer(),
+        error: (err, stack) => ErrorDisplayWidget(
+          message: err.toString(),
+          // ref.invalidate tells Riverpod to discard the old state and re-run the provider
+          onRetry: () => ref.invalidate(mediaDetailsProvider(mediaIdentifier)),
         ),
-        error: (err, stack) => Center(child: Text("Error: $err")),
         data: (media) {
           final seasons = (media['seasons'] as List)
               .where((s) => s['season_number'] != 0)

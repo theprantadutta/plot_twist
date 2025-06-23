@@ -40,4 +40,4 @@ The security of your data is important to us, but remember that no method of tra
 
 ## **5\. Contact Us**
 
-If you have any questions about this Privacy Policy, please contact us at: privacy@plottwists.app
+If you have any questions about this Privacy Policy, please contact us at: prantadutta1997@gmail.com

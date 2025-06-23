@@ -182,17 +182,41 @@ class TmdbRepository {
   }
 
   // A versatile method to get a "deck" of movies for swiping
-  Future<List<Map<String, dynamic>>> getDiscoverDeck({int page = 1}) async {
+  // Future<List<Map<String, dynamic>>> getDiscoverDeck({int page = 1}) async {
+  //   try {
+  //     final queryParameters = {
+  //       ..._apiKeyParam,
+  //       'page': page,
+  //       'sort_by': 'popularity.desc', // A good default
+  //       'vote_count.gte': 100, // Filter out movies with very few votes
+  //       'watch_region': 'US', // Can be customized
+  //     };
+  //     final response = await _dio.get(
+  //       '/discover/movie',
+  //       queryParameters: queryParameters,
+  //     );
+  //     return List<Map<String, dynamic>>.from(response.data['results']);
+  //   } on DioException catch (e) {
+  //     print("Error fetching discover deck: ${e.message}");
+  //     return [];
+  //   }
+  // }
+
+  Future<List<Map<String, dynamic>>> getDiscoverDeck({
+    required MediaType type, // It now requires a type
+    int page = 1,
+  }) async {
     try {
       final queryParameters = {
-        ..._apiKeyParam,
+        'api_key': ApiConstants.tmdbApiKey,
         'page': page,
-        'sort_by': 'popularity.desc', // A good default
-        'vote_count.gte': 100, // Filter out movies with very few votes
-        'watch_region': 'US', // Can be customized
+        'sort_by': 'popularity.desc',
+        'vote_count.gte': 100,
+        'watch_region': 'US',
       };
+      // The path now dynamically uses the type's name ('movie' or 'tv')
       final response = await _dio.get(
-        '/discover/movie',
+        '/discover/${type.name}',
         queryParameters: queryParameters,
       );
       return List<Map<String, dynamic>>.from(response.data['results']);

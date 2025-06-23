@@ -12,7 +12,6 @@ class FirestoreService {
   // Helper method to get the current user ID
   String? get _userId => _auth.currentUser?.uid;
 
-  // Generic method to add a media item to a specific list (e.g., 'watchlist', 'watched')
   Future<void> addToList(String listName, Map<String, dynamic> media) async {
     final userId = _userId;
     if (userId == null) return;
@@ -20,23 +19,20 @@ class FirestoreService {
     final mediaId = media['id'].toString();
     final mediaType = media['title'] != null ? 'movie' : 'tv';
 
-    // --- NEW AND IMPROVED LOGIC ---
-
-    // If we are adding the item to the 'watched' list,
-    // we first ensure it's removed from the 'watchlist'.
+    // --- THIS IS THE CHANGE ---
+    // The "smart" logic that automatically removed items from the other list
+    // has now been removed, as you requested.
+    /*
     if (listName == 'watched') {
       await removeFromList('watchlist', mediaId);
     }
-
-    // And "vice versa": if we are adding it back to the 'watchlist',
-    // it should be removed from the 'watched' list.
     if (listName == 'watchlist') {
       await removeFromList('watched', mediaId);
     }
+    */
+    // -------------------------
 
-    // --- END OF NEW LOGIC ---
-
-    // Now, proceed with adding the item to the target list.
+    // Now, this function ONLY adds the item to the specified list.
     await _firestore
         .collection('users')
         .doc(userId)
@@ -48,7 +44,7 @@ class FirestoreService {
           'title': media['title'] ?? media['name'],
           'poster_path': media['poster_path'],
           'added_at': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true)); // Use merge to avoid overwriting a rating
+        }, SetOptions(merge: true));
   }
 
   Future<void> removeFromList(String listName, String mediaId) async {

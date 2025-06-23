@@ -34,9 +34,7 @@ class HomeScreen extends ConsumerWidget {
         backgroundColor: AppColors.darkBackground,
         leading: Padding(
           padding: const EdgeInsets.only(left: 16.0),
-          child: Image.asset(
-            'assets/images/logo.png',
-          ), // Using the logo as an icon
+          child: Image.asset('assets/images/logo_transparent.png'),
         ),
         leadingWidth: 40,
         title: const Text("Home"),
@@ -71,8 +69,9 @@ class HomeScreen extends ConsumerWidget {
                     ? tmdbRepository.getTrendingMoviesDay()
                     : tmdbRepository.getTrendingTvShowsDay(),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting)
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SpotlightShimmer();
+                  }
                   if (!snapshot.hasData || snapshot.data!.isEmpty)
                     return const Center(
                       child: Text(
