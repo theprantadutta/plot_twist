@@ -1,4 +1,6 @@
 // lib/presentation/pages/home/home_screen.dart
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,11 +18,57 @@ import 'widgets/shimmer_loaders.dart';
 import 'widgets/spotlight_card.dart';
 
 // Now a ConsumerWidget to use Riverpod
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  // 2. Create state variables for the controller and timer
+  final PageController _spotlightController = PageController();
+  Timer? _spotlightTimer;
+
+  // 3. A method to start the timer
+  void _startSpotlightTimer(int pageCount) {
+    // Ensure we don't create multiple timers
+    if (_spotlightTimer != null && _spotlightTimer!.isActive) {
+      return;
+    }
+
+    _spotlightTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (!_spotlightController.hasClients) return;
+
+      if (context.mounted == false) {
+        return;
+      }
+
+      int nextPage = _spotlightController.page!.round() + 1;
+
+      // If we reach the end, loop back to the start
+      if (nextPage >= pageCount) {
+        nextPage = 0;
+      }
+
+      _spotlightController.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  // 4. Make sure to cancel the timer and dispose the controller when the screen is removed
+  @override
+  void dispose() {
+    _spotlightTimer?.cancel();
+    _spotlightController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // Watch our new provider. The UI will rebuild whenever this changes.
     final selectedType = ref.watch(mediaTypeNotifierProvider);
 
@@ -72,16 +120,22 @@ class HomeScreen extends ConsumerWidget {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SpotlightShimmer();
                   }
-                  if (!snapshot.hasData || snapshot.data!.isEmpty)
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(
                       child: Text(
                         "Nothing to see here.",
                         style: TextStyle(color: Colors.white70),
                       ),
                     );
+                  }
                   final items = snapshot.data!;
+                  final pageCount = items.length > 5 ? 5 : items.length;
+
+                  // 5. Start the timer once we have the data
+                  _startSpotlightTimer(pageCount);
                   return PageView.builder(
-                    itemCount: items.length > 5 ? 5 : items.length,
+                    controller: _spotlightController,
+                    itemCount: pageCount,
                     itemBuilder: (context, index) => SpotlightCard(
                       movie: items[index],
                       mediaType: selectedType,
@@ -124,7 +178,7 @@ class HomeScreen extends ConsumerWidget {
                 future: tmdbRepository.getUpcomingMovies(),
               ),
             ],
-            const SizedBox(height: 20),
+            const SizedBox(height: 120),
           ],
         ),
       ).animate().fadeIn(duration: 600.ms),

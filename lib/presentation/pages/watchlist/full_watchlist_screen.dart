@@ -236,8 +236,9 @@ class _FullWatchlistScreenState extends ConsumerState<FullWatchlistScreen> {
                     final filteredList = fullList.where((item) {
                       if (currentFilter == WatchlistFilter.all) return true;
                       final isMovie = item.containsKey('title');
-                      if (currentFilter == WatchlistFilter.movies)
+                      if (currentFilter == WatchlistFilter.movies) {
                         return isMovie;
+                      }
                       return !isMovie;
                     }).toList();
 

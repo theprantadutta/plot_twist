@@ -139,20 +139,23 @@ class ProfileScreen extends ConsumerWidget {
               // Logout Button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: TextButton.icon(
+                child: ElevatedButton.icon(
                   onPressed: onLogout,
                   icon: const Icon(
                     Icons.logout_rounded,
                     color: AppColors.darkErrorRed,
+                    size: 24,
                   ),
                   label: const Text(
                     "Logout",
                     style: TextStyle(
                       color: AppColors.darkErrorRed,
                       fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      letterSpacing: 1.2,
                     ),
                   ),
-                  style: TextButton.styleFrom(
+                  style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -160,7 +163,7 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 40), // Bottom padding
+              const SizedBox(height: 100), // Bottom padding
             ]),
           ),
         ],

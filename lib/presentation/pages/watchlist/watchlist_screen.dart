@@ -99,6 +99,8 @@ class WatchlistScreen extends ConsumerWidget {
                     return WatchlistItemTile(item: item);
                   },
                 ),
+
+              const SizedBox(height: 100),
             ],
           ).animate().fadeIn();
         },

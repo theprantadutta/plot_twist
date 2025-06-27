@@ -157,7 +157,7 @@ class StatGrid extends ConsumerWidget {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => const WatchedHistoryScreen(
-                  title: "TV Shows Watched",
+                  title: "Shows Watched",
                   initialFilter: MediaType.tv,
                 ),
               ),
@@ -166,7 +166,7 @@ class StatGrid extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           child: _StatCard(
             value: showsWatched.toString(),
-            label: "TV Shows Watched",
+            label: "Shows Watched",
             icon: FontAwesomeIcons.tv,
             color: AppColors.darkStarlightGold,
           ),
@@ -180,7 +180,7 @@ class StatGrid extends ConsumerWidget {
         ),
         _StatCard(
           value: showsWatchlist.toString(),
-          label: "TV Show Watchlist",
+          label: "Shows Watchlist",
           icon: FontAwesomeIcons.video,
           color: AppColors.darkInfoCyan,
         ),
@@ -205,35 +205,33 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.darkSurface,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Row(
         children: [
-          Row(
-            spacing: 10,
+          FaIcon(icon, color: color, size: 24),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FaIcon(icon, color: color, size: 24),
               Text(
                 value,
                 style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: AppColors.darkTextSecondary,
+                  fontSize: 12,
+                ),
+              ),
             ],
-          ),
-          Text(
-            label,
-            style: const TextStyle(
-              color: AppColors.darkTextSecondary,
-              fontWeight: FontWeight.w700,
-              fontSize: 14,
-            ),
           ),
         ],
       ),

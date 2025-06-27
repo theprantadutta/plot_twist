@@ -10,8 +10,8 @@ import '../../core/widgets/error_display_widget.dart';
 import 'widgets/action_button_bar.dart';
 import 'widgets/cast_and_crew_section.dart';
 import 'widgets/detail_header.dart';
-import 'widgets/detail_screen_shimmer.dart';
 import 'widgets/info_panel.dart';
+import 'widgets/movie_detail_shimmer.dart';
 
 class MovieDetailScreen extends ConsumerWidget {
   final int mediaId;
@@ -46,7 +46,7 @@ class MovieDetailScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
       body: detailsAsync.when(
-        loading: () => const DetailScreenShimmer(),
+        loading: () => const MovieDetailShimmer(),
         error: (err, stack) => ErrorDisplayWidget(
           message: err.toString(),
           // ref.invalidate tells Riverpod to discard the old state and re-run the provider

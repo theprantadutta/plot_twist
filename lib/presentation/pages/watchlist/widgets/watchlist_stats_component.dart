@@ -36,7 +36,7 @@ class WatchlistStatsComponent extends ConsumerWidget {
                   color: AppColors.auroraPink,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 8),
               Expanded(
                 child: _StatCard(
                   value: showsWatched.toString(),
@@ -69,7 +69,7 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.darkSurface,
         borderRadius: BorderRadius.circular(16),

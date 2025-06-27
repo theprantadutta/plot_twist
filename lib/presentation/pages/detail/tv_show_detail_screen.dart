@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plot_twist/presentation/pages/detail/widgets/tv_show_detail_shimmer.dart';
 
 import '../../../application/detail/detail_providers.dart';
 import '../../../data/local/persistence_service.dart';
@@ -10,7 +11,6 @@ import 'movie_detail_screen.dart';
 import 'widgets/action_button_bar.dart';
 import 'widgets/cast_and_crew_section.dart';
 import 'widgets/detail_header.dart';
-import 'widgets/detail_screen_shimmer.dart';
 import 'widgets/detail_tab_bar.dart';
 import 'widgets/info_panel.dart';
 import 'widgets/season_card.dart';
@@ -49,7 +49,7 @@ class TvShowDetailScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
       body: detailsAsync.when(
-        loading: () => const DetailScreenShimmer(),
+        loading: () => const TvShowDetailShimmer(),
         error: (err, stack) => ErrorDisplayWidget(
           message: err.toString(),
           // ref.invalidate tells Riverpod to discard the old state and re-run the provider
