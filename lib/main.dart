@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plot_twist/presentation/core/auth_guard.dart';
 
 import 'application/home/home_providers.dart';
+import 'application/services/notification_service.dart';
 import 'application/settings/appearance_provider.dart';
 import 'data/local/persistence_service.dart';
 import 'firebase_options.dart';
@@ -13,10 +14,15 @@ import 'presentation/core/app_colors.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // 1. Create an instance of our persistence service
+
+  // Initialize the persistence service
   final persistenceService = PersistenceService();
-  // 2. Initialize it (and wait for it to complete)
   await persistenceService.init();
+
+  // --- INITIALIZE NOTIFICATION SERVICES ---
+  await NotificationService.init();
+  NotificationService.localNotificationInit();
+  // ------------------------------------
   dotenv.load();
   runApp(
     ProviderScope(
@@ -110,6 +116,7 @@ class PlotTwistsApp extends ConsumerWidget {
     );
 
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Plot Twists',
       theme: lightTheme,
       darkTheme: darkTheme,

@@ -201,4 +201,15 @@ class FirestoreService {
 
     await _firestore.collection('users').doc(userId).update(dataToUpdate);
   }
+
+  Future<void> saveFcmToken(String? token) async {
+    final userId = _userId;
+    if (userId == null || token == null) return;
+
+    // We use SetOptions(merge: true) to avoid overwriting other user data
+    await _firestore.collection('users').doc(userId).set({
+      'fcm_token': token,
+      'last_updated': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
 }
