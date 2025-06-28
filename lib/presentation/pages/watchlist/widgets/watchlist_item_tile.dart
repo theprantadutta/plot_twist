@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../data/local/persistence_service.dart';
 import '../../../core/app_colors.dart';
+import '../../detail/movie_detail_screen.dart';
+import '../../detail/tv_show_detail_screen.dart';
 import 'watchlist_item_action_sheet.dart';
 
 class WatchlistItemTile extends StatelessWidget {
@@ -19,79 +22,94 @@ class WatchlistItemTile extends StatelessWidget {
     final title = item['title'] ?? item['name'] ?? 'Untitled';
     final voteAverage = (item['vote_average'] as num?)?.toDouble() ?? 0.0;
     final runtime = item['runtime'] as int?;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          // Thumbnail
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              'https://image.tmdb.org/t/p/w500$posterPath',
-              width: 120,
-              height: 70,
-              fit: BoxFit.cover,
+    final mediaId = item['id'] as int;
+    return GestureDetector(
+      onTap: () {
+        // Now it correctly uses the passed-in properties to navigate.
+        Widget screen;
+        final mediaType = item.containsKey('title')
+            ? MediaType.movie
+            : MediaType.tv;
+        if (mediaType == MediaType.movie) {
+          screen = MovieDetailScreen(mediaId: mediaId);
+        } else {
+          screen = TvShowDetailScreen(mediaId: mediaId);
+        }
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          children: [
+            // Thumbnail
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                'https://image.tmdb.org/t/p/w500$posterPath',
+                width: 120,
+                height: 70,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          const SizedBox(width: 16),
-          // Details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+            const SizedBox(width: 16),
+            // Details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const FaIcon(
-                      FontAwesomeIcons.solidStar,
-                      color: AppColors.darkStarlightGold,
-                      size: 12,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      voteAverage.toStringAsFixed(1),
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    if (runtime != null) ...[
-                      const Text(
-                        "  •  ",
-                        style: TextStyle(color: AppColors.darkTextSecondary),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const FaIcon(
+                        FontAwesomeIcons.solidStar,
+                        color: AppColors.darkStarlightGold,
+                        size: 12,
                       ),
+                      const SizedBox(width: 4),
                       Text(
-                        _formatRuntime(runtime),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.darkTextSecondary,
-                        ),
+                        voteAverage.toStringAsFixed(1),
+                        style: const TextStyle(fontSize: 12),
                       ),
+                      if (runtime != null) ...[
+                        const Text(
+                          "  •  ",
+                          style: TextStyle(color: AppColors.darkTextSecondary),
+                        ),
+                        Text(
+                          _formatRuntime(runtime),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.darkTextSecondary,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          // --- THE NEW "MORE" BUTTON ---
-          IconButton(
-            icon: const Icon(
-              Icons.more_vert,
-              color: AppColors.darkTextSecondary,
+            // --- THE NEW "MORE" BUTTON ---
+            IconButton(
+              icon: const Icon(
+                Icons.more_vert,
+                color: AppColors.darkTextSecondary,
+              ),
+              onPressed: () {
+                // On tap, open our new action sheet
+                showWatchlistItemActionSheet(context, item);
+              },
             ),
-            onPressed: () {
-              // On tap, open our new action sheet
-              showWatchlistItemActionSheet(context, item);
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

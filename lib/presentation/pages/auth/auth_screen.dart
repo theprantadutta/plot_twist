@@ -124,11 +124,11 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           Container(color: Colors.black.withOpacity(0.6)),
           Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/logo.png', height: 100)
+                  Image.asset('assets/images/logo.png', height: 150)
                       .animate()
                       .fade(delay: 200.ms, duration: 500.ms)
                       .scale(
@@ -141,7 +141,10 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
-                            padding: const EdgeInsets.all(24.0),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16.0,
+                              horizontal: 16.0,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.05),
                               borderRadius: BorderRadius.circular(24),

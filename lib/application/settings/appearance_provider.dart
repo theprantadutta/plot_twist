@@ -33,7 +33,7 @@ class AppearanceState {
 }
 
 // The Notifier that manages the state
-@riverpod
+@Riverpod(keepAlive: true)
 class AppearanceNotifier extends _$AppearanceNotifier {
   late PersistenceService _persistenceService;
 

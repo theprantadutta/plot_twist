@@ -7,7 +7,6 @@ import '../../../../application/detail/detail_providers.dart';
 import '../../../../data/firestore/firestore_service.dart';
 import '../../../core/app_colors.dart';
 import '../../discover/widgets/add_to_list_bottom_sheet.dart';
-import 'rating_dialog.dart';
 
 class ActionButtonBar extends ConsumerWidget {
   final Map<String, dynamic> media;
@@ -22,13 +21,15 @@ class ActionButtonBar extends ConsumerWidget {
         ref.watch(isMediaInWatchlistProvider(mediaId)).asData?.value ?? false;
     final isWatched =
         ref.watch(isMediaWatchedProvider(mediaId)).asData?.value ?? false;
-    final userRating = ref
-        .watch(mediaUserRatingProvider(mediaId))
-        .asData
-        ?.value;
+    // final userRating = ref
+    //     .watch(mediaUserRatingProvider(mediaId))
+    //     .asData
+    //     ?.value;
+    final isFavorite =
+        ref.watch(isMediaInFavoritesProvider(mediaId)).asData?.value ?? false;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.darkSurface.withOpacity(0.5),
         border: Border(
@@ -90,17 +91,37 @@ class ActionButtonBar extends ConsumerWidget {
           ),
 
           // Rate Button
+          // _buildActionButton(
+          //   context: context,
+          //   icon: userRating != null
+          //       ? FontAwesomeIcons.solidStar
+          //       : FontAwesomeIcons.star,
+          //   label: userRating != null ? "Rated ${userRating.toInt()}" : "Rate",
+          //   color: userRating != null
+          //       ? AppColors.darkStarlightGold
+          //       : AppColors.darkTextSecondary,
+          //   onTap: () {
+          //     showRatingDialog(context, media, userRating ?? 5.0);
+          //   },
+          // ),
+
+          // --- NEW FAVORITE BUTTON (Replaces the Rate button) ---
           _buildActionButton(
             context: context,
-            icon: userRating != null
-                ? FontAwesomeIcons.solidStar
-                : FontAwesomeIcons.star,
-            label: userRating != null ? "Rated ${userRating.toInt()}" : "Rate",
-            color: userRating != null
-                ? AppColors.darkStarlightGold
+            icon: isFavorite
+                ? FontAwesomeIcons.solidHeart
+                : FontAwesomeIcons.heart,
+            label: "Like",
+            color: isFavorite
+                ? Colors.red.shade400
                 : AppColors.darkTextSecondary,
             onTap: () {
-              showRatingDialog(context, media, userRating ?? 5.0);
+              final service = FirestoreService();
+              if (isFavorite) {
+                service.removeFromList('favorites', mediaId.toString());
+              } else {
+                service.addToList('favorites', media);
+              }
             },
           ),
         ],
@@ -115,31 +136,33 @@ class ActionButtonBar extends ConsumerWidget {
     required VoidCallback onTap,
     Color? color,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FaIcon(
-                icon,
-                color: color ?? AppColors.darkTextSecondary,
-                size: 22,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: TextStyle(
+    return Expanded(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FaIcon(
+                  icon,
                   color: color ?? AppColors.darkTextSecondary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
+                  size: 22,
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: color ?? AppColors.darkTextSecondary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

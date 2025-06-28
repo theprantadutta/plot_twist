@@ -7,7 +7,7 @@ import '../discover/discover_providers.dart';
 part 'custom_list_providers.g.dart';
 
 // Provider to get the details of the list itself (name, description, etc.)
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<DocumentSnapshot> customListStream(
   CustomListStreamRef ref,
   String listId,

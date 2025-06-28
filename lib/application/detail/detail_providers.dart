@@ -16,7 +16,7 @@ typedef MediaIdentifier = ({int id, MediaType type});
 typedef SeasonIdentifier = ({int tvId, int seasonNumber});
 
 // This provider fetches the full details for a specific movie or show
-@riverpod
+@Riverpod(keepAlive: true)
 Future<Map<String, dynamic>> mediaDetails(Ref ref, MediaIdentifier media) {
   final repo = ref.watch(tmdbRepositoryProvider);
   return repo.getMediaDetails(id: media.id, type: media.type);
@@ -24,7 +24,7 @@ Future<Map<String, dynamic>> mediaDetails(Ref ref, MediaIdentifier media) {
 
 // --- THIS IS THE MISSING PROVIDER ---
 // This provider checks if an item is in the user's watchlist in real-time
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<bool> isMediaInWatchlist(Ref ref, int mediaId) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) {
@@ -45,7 +45,7 @@ Stream<bool> isMediaInWatchlist(Ref ref, int mediaId) {
 }
 
 // It returns a double? (nullable) - null means not rated.
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<double?> mediaUserRating(MediaUserRatingRef ref, int mediaId) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return Stream.value(null);
@@ -65,7 +65,7 @@ Stream<double?> mediaUserRating(MediaUserRatingRef ref, int mediaId) {
 }
 
 // This provider just checks if the movie exists in the 'watched' collection.
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<bool> isMediaWatched(IsMediaWatchedRef ref, int mediaId) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return Stream.value(false);
@@ -79,7 +79,7 @@ Stream<bool> isMediaWatched(IsMediaWatchedRef ref, int mediaId) {
 }
 
 // It checks if a specific media item exists within a specific custom list.
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<bool> isMediaInCustomList(
   IsMediaInCustomListRef ref, {
   required String listId,
@@ -99,7 +99,7 @@ Stream<bool> isMediaInCustomList(
   return docRef.snapshots().map((snapshot) => snapshot.exists);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<Map<String, dynamic>> seasonDetails(
   SeasonDetailsRef ref,
   SeasonIdentifier season,
@@ -109,4 +109,19 @@ Future<Map<String, dynamic>> seasonDetails(
     tvId: season.tvId,
     seasonNumber: season.seasonNumber,
   );
+}
+
+@Riverpod(keepAlive: true)
+Stream<bool> isMediaInFavorites(IsMediaInFavoritesRef ref, int mediaId) {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) return Stream.value(false);
+
+  // It works exactly like the others, but points to a 'favorites' collection
+  final docRef = FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('favorites')
+      .doc(mediaId.toString());
+
+  return docRef.snapshots().map((snapshot) => snapshot.exists);
 }

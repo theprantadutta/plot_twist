@@ -11,7 +11,7 @@ part 'watchlist_providers.g.dart';
 enum WatchlistFilter { all, movies, tvShows }
 
 // 1. A provider to manage the currently selected filter tab
-@riverpod
+@Riverpod(keepAlive: true)
 class WatchlistFilterNotifier extends _$WatchlistFilterNotifier {
   @override
   WatchlistFilter build() => WatchlistFilter.all;
@@ -22,7 +22,7 @@ class WatchlistFilterNotifier extends _$WatchlistFilterNotifier {
 }
 
 // 2. A provider to fetch the raw watchlist data from Firestore
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<List<QueryDocumentSnapshot>> watchlistStream(Ref ref) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) {
@@ -39,7 +39,7 @@ Stream<List<QueryDocumentSnapshot>> watchlistStream(Ref ref) {
 
 // 3. The final provider that combines the stream and the filter
 // It provides the final, filtered list to the UI.
-@riverpod
+@Riverpod(keepAlive: true)
 List<QueryDocumentSnapshot> filteredWatchlist(Ref ref) {
   final filter = ref.watch(watchlistFilterNotifierProvider);
   final watchlist = ref.watch(watchlistStreamProvider).asData?.value ?? [];
@@ -64,7 +64,7 @@ List<QueryDocumentSnapshot> filteredWatchlist(Ref ref) {
 }
 
 // It fetches the watchlist IDs and then fetches the details for each ID from TMDB.
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<Map<String, dynamic>>> watchlistDetails(Ref ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];

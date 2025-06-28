@@ -7,7 +7,7 @@ import '../home/home_providers.dart';
 
 part 'discover_providers.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DiscoverDeck extends _$DiscoverDeck {
   int _page = 1;
 
@@ -61,14 +61,14 @@ class DiscoverDeck extends _$DiscoverDeck {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 TmdbRepository tmdbRepository(Ref ref) {
   return TmdbRepository();
 }
 
 // --- PROVIDER FOR THE MAIN DISCOVER SCREEN FEED ---
 // This one automatically reacts to the movie/tv toggle
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<Map<String, dynamic>>> discoverGenres(Ref ref) {
   final mediaType = ref.watch(mediaTypeNotifierProvider);
   final repository = ref.watch(tmdbRepositoryProvider);
@@ -78,28 +78,28 @@ Future<List<Map<String, dynamic>>> discoverGenres(Ref ref) {
 // --- PROVIDER FOR THE FILTER BOTTOM SHEET ---
 // We keep this one exactly as it was. The filter sheet will pass it the
 // mediaType it needs when it calls it. This is correct.
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<Map<String, dynamic>>> genreList(Ref ref, MediaType mediaType) {
   final repository = ref.watch(tmdbRepositoryProvider);
   return repository.getGenres(mediaType);
 }
 // ---------------------------------------------
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<Map<String, dynamic>>> popularPeople(Ref ref) {
   final repository = ref.watch(tmdbRepositoryProvider);
   return repository.getPopularPeople();
 }
 
 // --- Keep the existing providers below ---
-@riverpod
+@Riverpod(keepAlive: true)
 class SearchQueryNotifier extends _$SearchQueryNotifier {
   @override
   String build() => '';
   void setQuery(String query) => state = query;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DiscoverFiltersNotifier extends _$DiscoverFiltersNotifier {
   @override
   List<int> build() => [];

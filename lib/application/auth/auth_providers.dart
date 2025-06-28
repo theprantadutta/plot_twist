@@ -6,7 +6,7 @@ part 'auth_providers.g.dart';
 
 // This StreamProvider creates and exposes the Firebase auth state stream.
 // Riverpod will handle subscribing, caching, and cleaning it up for us.
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<User?> authStateChanges(Ref ref) {
   return FirebaseAuth.instance.authStateChanges();
 }

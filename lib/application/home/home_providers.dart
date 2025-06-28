@@ -8,14 +8,14 @@ import '../../data/local/persistence_service.dart';
 part 'home_providers.g.dart';
 
 // A simple provider to make our PersistenceService available
-@riverpod
+@Riverpod(keepAlive: true)
 PersistenceService persistenceService(Ref ref) {
   throw UnimplementedError(
     'persistenceServiceProvider must be overridden in ProviderScope',
   );
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class MediaTypeNotifier extends _$MediaTypeNotifier {
   late PersistenceService _persistenceService;
 

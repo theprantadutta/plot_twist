@@ -8,6 +8,7 @@ import '../../../application/profile/profile_providers.dart';
 import '../../core/app_colors.dart';
 import '../settings/settings_screen.dart';
 import 'widgets/create_list_dialog.dart';
+import 'widgets/favorites_preview_section.dart';
 import 'widgets/my_lists_component.dart';
 import 'widgets/stat_grid.dart';
 
@@ -111,6 +112,11 @@ class ProfileScreen extends ConsumerWidget {
               const StatGrid(),
 
               const SizedBox(height: 24),
+              const FavoritesPreviewSection(),
+
+              const SizedBox(height: 24),
+
+              const SizedBox(height: 24),
 
               // "My Lists" Section Header
               Padding(
@@ -171,3 +177,93 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 }
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_animate/flutter_animate.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// import '../../core/app_colors.dart';
+// import 'widgets/favorites_preview_section.dart';
+// import 'widgets/my_lists_component.dart';
+// import 'widgets/profile_header_card.dart';
+// import 'widgets/stat_grid.dart';
+
+// class ProfileScreen extends ConsumerWidget {
+//   final VoidCallback onLogout;
+
+//   const ProfileScreen({super.key, required this.onLogout});
+
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     // The main screen is now a simple ListView, making it clean and organized.
+//     return Scaffold(
+//       backgroundColor: AppColors.darkBackground,
+//       body: ListView(
+//         padding: const EdgeInsets.only(
+//           top: 24,
+//           bottom: 120,
+//         ), // Top padding + bottom padding for nav bar
+//         children: [
+//           // 1. The New, Self-Contained Header Card
+//           const ProfileHeaderCard(),
+
+//           const FavoritesPreviewSection(),
+
+//           const SizedBox(height: 24),
+
+//           // 2. The Detailed Statistics Section
+//           Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 16.0),
+//             child: Text(
+//               "Statistics Breakdown",
+//               style: Theme.of(context).textTheme.titleLarge,
+//             ),
+//           ),
+//           const SizedBox(height: 16),
+//           const StatGrid(),
+
+//           const SizedBox(height: 32),
+
+//           // 3. The Collections / Custom Lists Section
+//           Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 16.0),
+//             child: Text(
+//               "My Collections",
+//               style: Theme.of(context).textTheme.titleLarge,
+//             ),
+//           ),
+//           const SizedBox(height: 16),
+//           const MyListsComponent(),
+
+//           const SizedBox(height: 32),
+
+//           // 4. The Logout Button
+//           Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 16.0),
+//             child: TextButton.icon(
+//               onPressed: onLogout,
+//               icon: const Icon(
+//                 Icons.logout_rounded,
+//                 color: AppColors.darkErrorRed,
+//               ),
+//               label: const Text(
+//                 "Logout",
+//                 style: TextStyle(
+//                   color: AppColors.darkErrorRed,
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//               ),
+//               style: TextButton.styleFrom(
+//                 padding: const EdgeInsets.all(16),
+//                 backgroundColor: AppColors.darkSurface,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(12),
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ).animate().fadeIn(duration: 500.ms),
+//     );
+//   }
+// }

@@ -32,7 +32,7 @@ class NotificationSettingsState {
 }
 
 // The Notifier that manages the state
-@riverpod
+@Riverpod(keepAlive: true)
 class NotificationSettingsNotifier extends _$NotificationSettingsNotifier {
   late PersistenceService _persistenceService;
 

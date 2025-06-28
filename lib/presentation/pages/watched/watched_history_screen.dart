@@ -100,7 +100,7 @@ class _WatchedHistoryScreenState extends ConsumerState<WatchedHistoryScreen> {
                 if (filteredList.isEmpty) {
                   return Center(
                     child: Text(
-                      "You haven't watched any ${widget.initialFilter.name}s yet.",
+                      "You haven't watched any ${widget.initialFilter == MediaType.movie ? "Movies" : "TV Shows"} yet.",
                     ),
                   );
                 }

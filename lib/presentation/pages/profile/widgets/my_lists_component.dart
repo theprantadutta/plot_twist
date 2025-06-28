@@ -12,56 +12,59 @@ class MyListsComponent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final customListsAsync = ref.watch(customListsStreamProvider);
 
-    return InkWell(
-      onTap: () {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const MyListsScreen()));
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.darkSurface,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "My Lists",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const MyListsScreen()));
+        },
+        child: Container(
+          // margin: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.darkSurface,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "My Lists",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "View and manage all your lists",
+                    style: TextStyle(color: AppColors.darkTextSecondary),
+                  ),
+                ],
+              ),
+              customListsAsync.when(
+                data: (docs) => Text(
+                  docs.length.toString(),
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.auroraPink,
+                  ),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  "View and manage all your lists",
-                  style: TextStyle(color: AppColors.darkTextSecondary),
+                loading: () => const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-              ],
-            ),
-            customListsAsync.when(
-              data: (docs) => Text(
-                docs.length.toString(),
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.auroraPink,
+                error: (e, s) => const Icon(
+                  Icons.error_outline,
+                  color: AppColors.darkErrorRed,
                 ),
               ),
-              loading: () => const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-              error: (e, s) => const Icon(
-                Icons.error_outline,
-                color: AppColors.darkErrorRed,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -8,7 +8,7 @@ part 'watched_providers.g.dart';
 
 // This new provider fetches the full details for every item in the 'watched' collection.
 // It works exactly like our watchlistDetailsProvider, but points to a different collection.
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<Map<String, dynamic>>> watchedDetails(WatchedDetailsRef ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];

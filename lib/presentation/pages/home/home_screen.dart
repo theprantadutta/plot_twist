@@ -37,7 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       return;
     }
 
-    _spotlightTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    _spotlightTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (!_spotlightController.hasClients) return;
 
       if (context.mounted == false) {
@@ -129,7 +129,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     );
                   }
                   final items = snapshot.data!;
-                  final pageCount = items.length > 5 ? 5 : items.length;
+                  final pageCount = items.length > 10 ? 10 : items.length;
 
                   // 5. Start the timer once we have the data
                   _startSpotlightTimer(pageCount);

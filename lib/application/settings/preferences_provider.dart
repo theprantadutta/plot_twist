@@ -35,7 +35,7 @@ class PreferencesState {
 }
 
 // The Notifier that manages the state
-@riverpod
+@Riverpod(keepAlive: true)
 class PreferencesNotifier extends _$PreferencesNotifier {
   late PersistenceService _persistenceService;
 
