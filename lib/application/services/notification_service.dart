@@ -28,6 +28,7 @@ class NotificationService {
 
   // The main initialization method
   static Future<void> init() async {
+    await _createNotificationChannel();
     await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: true,
@@ -43,6 +44,20 @@ class NotificationService {
     _handleForegroundMessages();
     _handleBackgroundTaps();
     _handleTerminatedTaps();
+  }
+
+  static Future<void> _createNotificationChannel() async {
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'plot_twists_channel', // Same ID
+      'PlotTwists Notifications',
+      description: 'Notifications for new releases and updates.',
+      importance: Importance.max,
+    );
+    await _localNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(channel);
   }
 
   // Get the FCM device token and save it to Firestore
@@ -128,7 +143,7 @@ class NotificationService {
           'PlotTwists Notifications',
           channelDescription: 'Notifications for new releases and updates.',
           importance: Importance.max,
-          priority: Priority.high,
+          priority: Priority.max,
         );
     const NotificationDetails notificationDetails = NotificationDetails(
       android: androidDetails,
