@@ -1,6 +1,7 @@
 // lib/presentation/pages/detail/widgets/tv_show_detail_shimmer.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
 import '../../home/widgets/shimmer_loaders.dart';
 
 class TvShowDetailShimmer extends StatelessWidget {
@@ -36,6 +37,8 @@ class TvShowDetailShimmer extends StatelessWidget {
                     ShimmerLoader(width: double.infinity, height: 16),
                     SizedBox(height: 8),
                     ShimmerLoader(width: double.infinity, height: 16),
+                    SizedBox(height: 8),
+                    ShimmerLoader(width: 200, height: 16),
                     SizedBox(height: 8),
                     ShimmerLoader(width: 200, height: 16),
                   ],

@@ -1,6 +1,7 @@
 // lib/presentation/pages/detail/widgets/movie_detail_shimmer.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
 import '../../home/widgets/shimmer_loaders.dart'; // We can still reuse the base loader
 
 class MovieDetailShimmer extends StatelessWidget {
@@ -21,6 +22,13 @@ class MovieDetailShimmer extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  Column(
+                    children: [
+                      ShimmerLoader(width: 24, height: 24),
+                      SizedBox(height: 8),
+                      ShimmerLoader(width: 60, height: 12),
+                    ],
+                  ),
                   Column(
                     children: [
                       ShimmerLoader(width: 24, height: 24),

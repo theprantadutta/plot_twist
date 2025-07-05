@@ -37,6 +37,7 @@ dependencies:
   flutter_card_swiper: ^7.0.2
   flutter_local_notifications: ^19.3.0
   firebase_messaging: ^15.2.7
+  flutter_native_splash: ^2.4.6
 
 dev_dependencies:
   flutter_test:
