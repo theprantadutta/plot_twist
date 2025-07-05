@@ -212,4 +212,60 @@ class FirestoreService {
       'last_updated': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
   }
+
+  // Gets a real-time stream of the user's notification settings document
+  Stream<DocumentSnapshot<Map<String, dynamic>>>
+  getNotificationSettingsStream() {
+    final userId = _userId;
+    if (userId == null) return Stream.empty();
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('settings')
+        .doc('notifications')
+        .snapshots();
+  }
+
+  // Updates one or more fields in the notification settings document
+  Future<void> updateNotificationSettings(Map<String, dynamic> settings) async {
+    final userId = _userId;
+    if (userId == null) return;
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('settings')
+        .doc('notifications')
+        .set(
+          settings,
+          SetOptions(merge: true),
+        ); // Use merge to not overwrite other settings
+  }
+
+  // Gets a real-time stream of the user's preferences document
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getPreferencesStream() {
+    final userId = _userId;
+    if (userId == null) return Stream.empty();
+    // The settings are stored in a single document for efficiency
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('settings')
+        .doc('user_preferences')
+        .snapshots();
+  }
+
+  // Updates one or more fields in the preferences document
+  Future<void> updatePreferences(Map<String, dynamic> newPreferences) async {
+    final userId = _userId;
+    if (userId == null) return;
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('settings')
+        .doc('user_preferences')
+        .set(
+          newPreferences,
+          SetOptions(merge: true),
+        ); // Use merge to not overwrite other settings
+  }
 }

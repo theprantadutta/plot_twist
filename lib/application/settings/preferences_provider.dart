@@ -1,78 +1,109 @@
+// lib/application/settings/preferences_provider.dart
+import 'package:flutter/material.dart';
+import 'package:plot_twist/application/discover/discover_providers.dart';
+import 'package:plot_twist/data/firestore/firestore_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../../data/local/persistence_service.dart';
-import '../home/home_providers.dart';
 
 part 'preferences_provider.g.dart';
 
-// A class to hold our preferences state
+// --- A NEW PROVIDER TO FETCH STREAMING SERVICES ---
+@riverpod
+Future<List<Map<String, dynamic>>> watchProviders(WatchProvidersRef ref) {
+  final region = ref.watch(
+    preferencesNotifierProvider.select((p) => p.value?.contentRegion ?? 'US'),
+  );
+  return ref
+      .watch(tmdbRepositoryProvider)
+      .getWatchProviders(watchRegion: region);
+}
+
+// --- THE UPGRADED STATE AND NOTIFIER ---
+
+@immutable
 class PreferencesState {
-  final DefaultView defaultView;
   final List<int> favoriteGenres;
   final bool includeAdultContent;
   final String contentRegion;
+  // New properties
+  final List<int> watchProviders;
+  final bool hideWatched;
 
-  PreferencesState({
-    required this.defaultView,
-    required this.favoriteGenres,
-    required this.includeAdultContent,
-    required this.contentRegion,
+  const PreferencesState({
+    this.favoriteGenres = const [],
+    this.includeAdultContent = false,
+    this.contentRegion = 'US',
+    this.watchProviders = const [],
+    this.hideWatched = false,
   });
 
   PreferencesState copyWith({
-    DefaultView? defaultView,
     List<int>? favoriteGenres,
     bool? includeAdultContent,
     String? contentRegion,
+    List<int>? watchProviders,
+    bool? hideWatched,
   }) {
     return PreferencesState(
-      defaultView: defaultView ?? this.defaultView,
       favoriteGenres: favoriteGenres ?? this.favoriteGenres,
       includeAdultContent: includeAdultContent ?? this.includeAdultContent,
       contentRegion: contentRegion ?? this.contentRegion,
+      watchProviders: watchProviders ?? this.watchProviders,
+      hideWatched: hideWatched ?? this.hideWatched,
     );
   }
 }
 
-// The Notifier that manages the state
-@Riverpod(keepAlive: true)
+@riverpod
 class PreferencesNotifier extends _$PreferencesNotifier {
-  late PersistenceService _persistenceService;
+  final _service = FirestoreService();
 
   @override
-  PreferencesState build() {
-    _persistenceService = ref.watch(persistenceServiceProvider);
-    return PreferencesState(
-      defaultView: _persistenceService.getDefaultView(),
-      favoriteGenres: _persistenceService.getFavoriteGenres(),
-      includeAdultContent: _persistenceService.getIncludeAdultContent(),
-      contentRegion: _persistenceService.getContentRegion(),
-    );
+  Stream<PreferencesState> build() {
+    return _service.getPreferencesStream().map((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        final data = snapshot.data()!;
+        return PreferencesState(
+          favoriteGenres: List<int>.from(data['favoriteGenres'] ?? []),
+          includeAdultContent: data['includeAdultContent'] ?? false,
+          contentRegion: data['contentRegion'] ?? 'US',
+          watchProviders: List<int>.from(data['watchProviders'] ?? []),
+          hideWatched: data['hideWatched'] ?? false,
+        );
+      }
+      return const PreferencesState();
+    });
   }
 
-  void setDefaultView(DefaultView view) {
-    _persistenceService.setDefaultView(view);
-    state = state.copyWith(defaultView: view);
-  }
+  Future<void> toggleFavoriteGenre(int genreId) async {
+    // Get the current list from the state safely
+    final currentGenres = List<int>.from(state.value?.favoriteGenres ?? []);
 
-  void toggleFavoriteGenre(int genreId) {
-    final currentGenres = List<int>.from(state.favoriteGenres);
     if (currentGenres.contains(genreId)) {
       currentGenres.remove(genreId);
     } else {
       currentGenres.add(genreId);
     }
-    _persistenceService.setFavoriteGenres(currentGenres);
-    state = state.copyWith(favoriteGenres: currentGenres);
+    await _service.updatePreferences({'favoriteGenres': currentGenres});
   }
 
-  void setIncludeAdultContent(bool isEnabled) {
-    _persistenceService.setIncludeAdultContent(isEnabled);
-    state = state.copyWith(includeAdultContent: isEnabled);
+  Future<void> setIncludeAdultContent(bool isEnabled) async {
+    await _service.updatePreferences({'includeAdultContent': isEnabled});
   }
 
-  void setContentRegion(String region) {
-    _persistenceService.setContentRegion(region);
-    state = state.copyWith(contentRegion: region);
+  // New methods for new preferences
+  Future<void> toggleWatchProvider(int providerId) async {
+    final currentProviders = List<int>.from(
+      state.asData?.value.watchProviders ?? [],
+    );
+    if (currentProviders.contains(providerId)) {
+      currentProviders.remove(providerId);
+    } else {
+      currentProviders.add(providerId);
+    }
+    await _service.updatePreferences({'watchProviders': currentProviders});
+  }
+
+  Future<void> setHideWatched(bool isEnabled) async {
+    await _service.updatePreferences({'hideWatched': isEnabled});
   }
 }

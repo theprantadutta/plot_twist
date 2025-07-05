@@ -1,64 +1,90 @@
+// lib/application/settings/notification_settings_provider.dart
+import 'package:flutter/foundation.dart';
+import 'package:plot_twist/data/firestore/firestore_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../../data/local/persistence_service.dart';
-import '../home/home_providers.dart'; // To get the persistenceServiceProvider
 
 part 'notification_settings_provider.g.dart';
 
-// A class to hold all our notification settings state
+// A data class to hold our settings state cleanly
+@immutable
 class NotificationSettingsState {
+  final bool allNotificationsEnabled;
   final bool moviePremiereReminders;
-  final int movieReminderTime;
-  final bool tvEpisodeReminders;
+  final int movieReminderTime; // e.g., 0 for on day, 1 for 1 day before
+  final bool newEpisodeReminders;
 
-  NotificationSettingsState({
-    required this.moviePremiereReminders,
-    required this.movieReminderTime,
-    required this.tvEpisodeReminders,
+  // Default values for a new user
+  const NotificationSettingsState({
+    this.allNotificationsEnabled = true,
+    this.moviePremiereReminders = true,
+    this.movieReminderTime = 1,
+    this.newEpisodeReminders = true,
   });
 
+  // Helper to create a copy of the state with new values
   NotificationSettingsState copyWith({
+    bool? allNotificationsEnabled,
     bool? moviePremiereReminders,
     int? movieReminderTime,
-    bool? tvEpisodeReminders,
+    bool? newEpisodeReminders,
   }) {
     return NotificationSettingsState(
+      allNotificationsEnabled:
+          allNotificationsEnabled ?? this.allNotificationsEnabled,
       moviePremiereReminders:
           moviePremiereReminders ?? this.moviePremiereReminders,
       movieReminderTime: movieReminderTime ?? this.movieReminderTime,
-      tvEpisodeReminders: tvEpisodeReminders ?? this.tvEpisodeReminders,
+      newEpisodeReminders: newEpisodeReminders ?? this.newEpisodeReminders,
     );
   }
 }
 
-// The Notifier that manages the state
-@Riverpod(keepAlive: true)
+@riverpod
 class NotificationSettingsNotifier extends _$NotificationSettingsNotifier {
-  late PersistenceService _persistenceService;
+  final _service = FirestoreService();
 
   @override
-  NotificationSettingsState build() {
-    _persistenceService = ref.watch(persistenceServiceProvider);
-    return NotificationSettingsState(
-      moviePremiereReminders: _persistenceService
-          .getMoviePremiereRemindersEnabled(),
-      movieReminderTime: _persistenceService.getMovieReminderTime(),
-      tvEpisodeReminders: _persistenceService.getTvEpisodeRemindersEnabled(),
-    );
+  Stream<NotificationSettingsState> build() {
+    return _service.getNotificationSettingsStream().map((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        final data = snapshot.data()!;
+        // Create state from Firestore data, providing defaults if fields are missing
+        return NotificationSettingsState(
+          allNotificationsEnabled: data['allNotificationsEnabled'] ?? true,
+          moviePremiereReminders: data['moviePremiereReminders'] ?? true,
+          movieReminderTime: data['movieReminderTime'] ?? 1,
+          newEpisodeReminders: data['newEpisodeReminders'] ?? true,
+        );
+      } else {
+        // Return the default state if the document doesn't exist yet
+        return const NotificationSettingsState();
+      }
+    });
   }
 
-  void setMoviePremiereReminders(bool isEnabled) {
-    _persistenceService.setMoviePremiereRemindersEnabled(isEnabled);
-    state = state.copyWith(moviePremiereReminders: isEnabled);
+  // --- Methods to update specific settings ---
+
+  Future<void> setAllNotifications(bool isEnabled) async {
+    await _service.updateNotificationSettings({
+      'allNotificationsEnabled': isEnabled,
+    });
   }
 
-  void setMovieReminderTime(int daysBefore) {
-    _persistenceService.setMovieReminderTime(daysBefore);
-    state = state.copyWith(movieReminderTime: daysBefore);
+  Future<void> setMoviePremiereReminders(bool isEnabled) async {
+    await _service.updateNotificationSettings({
+      'moviePremiereReminders': isEnabled,
+    });
   }
 
-  void setTvEpisodeReminders(bool isEnabled) {
-    _persistenceService.setTvEpisodeRemindersEnabled(isEnabled);
-    state = state.copyWith(tvEpisodeReminders: isEnabled);
+  Future<void> setMovieReminderTime(int daysBefore) async {
+    await _service.updateNotificationSettings({
+      'movieReminderTime': daysBefore,
+    });
+  }
+
+  Future<void> setNewEpisodeReminders(bool isEnabled) async {
+    await _service.updateNotificationSettings({
+      'newEpisodeReminders': isEnabled,
+    });
   }
 }

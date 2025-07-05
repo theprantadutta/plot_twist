@@ -281,4 +281,21 @@ class TmdbRepository {
       throw Exception('Failed to load season details');
     }
   }
+
+  // Gets all available watch providers (streaming services) for a given region
+  Future<List<Map<String, dynamic>>> getWatchProviders({
+    required String watchRegion,
+  }) async {
+    try {
+      // We can fetch for movies, the list is largely the same for TV.
+      final response = await _dio.get(
+        '/watch/providers/movie',
+        queryParameters: {..._apiKeyParam, 'watch_region': watchRegion},
+      );
+      return List<Map<String, dynamic>>.from(response.data['results']);
+    } on DioException catch (e) {
+      print("Error fetching watch providers: ${e.message}");
+      return [];
+    }
+  }
 }
