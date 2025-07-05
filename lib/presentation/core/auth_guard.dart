@@ -97,7 +97,68 @@ class AuthGuard extends ConsumerWidget {
             isDarkMode:
                 true, // This should still be managed by the AppearanceNotifier
             onThemeChanged: () {},
-            onLogout: () => FirebaseAuth.instance.signOut(),
+            onLogout: () async {
+              final shouldLogout = await showDialog<bool>(
+                context: context,
+                barrierDismissible: true, // Allows tapping outside to dismiss
+                builder: (context) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  title: const Text(
+                    'Log Out',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  content: const Text(
+                    'Are you sure you want to log out of your account?',
+                  ),
+                  actionsAlignment: MainAxisAlignment.spaceBetween,
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Theme.of(context).primaryColor,
+                      ),
+                      child: const Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text('Log Out'),
+                    ),
+                  ],
+                ),
+              );
+
+              if (shouldLogout ?? false) {
+                try {
+                  await FirebaseAuth.instance.signOut();
+                  // Optional: Show a snackbar confirmation
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.onSurfaceVariant,
+                      content: Text('Logged out successfully'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Logout failed: ${e.toString()}'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                }
+              }
+            },
           );
         } else {
           // User is logged out, show the authentication screen.

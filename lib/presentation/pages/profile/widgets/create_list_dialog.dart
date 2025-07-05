@@ -56,7 +56,7 @@ void showCreateListDialog(BuildContext context) {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.auroraPink,
           ),
-          child: const Text("Create"),
+          child: const Text("Create", style: TextStyle(color: Colors.white)),
         ),
       ],
     ),
