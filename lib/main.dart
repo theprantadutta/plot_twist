@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:plot_twist/presentation/core/auth_guard.dart';
 
 import 'application/home/home_providers.dart';
 import 'application/services/notification_service.dart';
@@ -11,6 +10,7 @@ import 'application/settings/appearance_provider.dart';
 import 'data/local/persistence_service.dart';
 import 'firebase_options.dart';
 import 'presentation/core/app_colors.dart';
+import 'presentation/core/app_entry.dart';
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -125,7 +125,7 @@ class PlotTwistsApp extends ConsumerWidget {
       themeMode: appearanceState.themeMode,
       debugShowCheckedModeBanner: false,
       // home: AppShell(isDarkMode: _isDarkMode, onThemeChanged: _toggleTheme),
-      home: AuthGuard(),
+      home: const AppEntry(),
     );
   }
 }

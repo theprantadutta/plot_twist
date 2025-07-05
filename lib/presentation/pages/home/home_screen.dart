@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../data/tmdb/tmdb_repository.dart';
@@ -57,6 +58,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         curve: Curves.easeInOut,
       );
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    FlutterNativeSplash.remove();
   }
 
   // 4. Make sure to cancel the timer and dispose the controller when the screen is removed

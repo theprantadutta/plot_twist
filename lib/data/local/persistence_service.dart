@@ -15,6 +15,13 @@ class PersistenceService {
     _preferences = await SharedPreferences.getInstance();
   }
 
+  bool hasSeenOnboarding() =>
+      _preferences.getBool('hasSeenOnboarding') ?? false;
+
+  Future<void> setHasSeenOnboarding(bool hasSeen) async {
+    await _preferences.setBool('hasSeenOnboarding', hasSeen);
+  }
+
   // Load the last selected media type, defaulting to 'movie'
   MediaType getMediaType() {
     final typeString = _preferences.getString('selectedMediaType') ?? 'movie';
