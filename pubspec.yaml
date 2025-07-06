@@ -3,7 +3,7 @@ description: "A new Flutter project."
 
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.8.1
@@ -39,6 +39,7 @@ dependencies:
   firebase_messaging: ^15.2.7
   flutter_native_splash: ^2.4.6
   in_app_review: ^2.0.10
+  google_sign_in: ^7.1.0
 
 dev_dependencies:
   flutter_test:

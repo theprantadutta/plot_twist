@@ -2,14 +2,18 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../core/app_colors.dart';
 import 'widgets/auth_button.dart';
 import 'widgets/auth_text_field.dart';
+import 'widgets/forgot_password_dialog.dart';
 import 'widgets/social_login_button.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -23,6 +27,8 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance
+    ..initialize(serverClientId: dotenv.env['GOOGLE_WEB_CLIENT_ID']);
 
   // Keys for form validation
   final _loginFormKey = GlobalKey<FormState>();
@@ -40,6 +46,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   // UI state variables
   bool _isLoginView = true;
   bool _isLoading = false;
+  bool _isSocialLoading = false;
   bool _obscureLoginPassword = true;
   bool _obscureSignupPassword = true;
   bool _obscureSignupConfirmPassword = true;
@@ -109,6 +116,63 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
       _showErrorSnackBar(e.message ?? 'An unknown sign-up error occurred.');
     } finally {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    if (_isSocialLoading) return;
+    setState(() => _isSocialLoading = true);
+
+    try {
+      // Use .authenticate() as per the new documentation for interactive sign-in
+      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
+
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      final GoogleSignInClientAuthorization authorization = await googleUser
+          .authorizationClient
+          .authorizeScopes(['email', 'profile']);
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: authorization.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+      final User? user = userCredential.user;
+
+      if (user == null) {
+        throw Exception('Sign in with Google failed. No user returned.');
+      }
+
+      final userDocRef = _firestore.collection('users').doc(user.uid);
+      final userDoc = await userDocRef.get();
+
+      if (!userDoc.exists) {
+        // New user, create their document
+        await userDocRef.set({
+          'fullName': user.displayName ?? 'Google User',
+          'username':
+              user.email?.split('@').first ??
+              'google_user_${user.uid.substring(0, 5)}',
+          'email': user.email ?? '',
+          'avatarUrl': user.photoURL ?? '',
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      }
+
+      // The AuthGuard will handle navigation automatically. No need for any navigation logic here.
+      // If we reach this point, the authStateChanges stream will fire and AuthGuard will do its job.
+    } on FirebaseAuthException catch (e) {
+      if (kDebugMode) print('Google Sign-In error: $e');
+      _showErrorSnackBar(e.message ?? 'Google Sign-In failed.');
+    } catch (e) {
+      if (kDebugMode) print('Google Sign-In error: $e');
+      _showErrorSnackBar('An unexpected error occurred during Google Sign-In.');
+    } finally {
+      if (mounted) {
+        setState(() => _isSocialLoading = false);
+      }
     }
   }
 
@@ -276,9 +340,23 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                 ? 'Password must be at least 6 characters'
                 : null,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           AuthButton(text: 'Login', onPressed: _login, isLoading: _isLoading),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
+          TextButton(
+            onPressed: () {
+              // Show our new, beautiful dialog
+              showDialog(
+                context: context,
+                builder: (context) => const ForgotPasswordDialog(),
+              );
+            },
+            child: const Text(
+              'Forgot Password?',
+              style: TextStyle(color: AppColors.darkTextSecondary),
+            ),
+          ),
+          const SizedBox(height: 16),
           const Row(
             children: [
               Expanded(child: Divider(color: Colors.white24)),
@@ -298,25 +376,14 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             children: [
               SocialLoginButton(
                 icon: FontAwesomeIcons.google,
-                onPressed: () {
-                  // TODO: Add Google login
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Google login is coming soon")),
-                  );
-                },
+                onPressed: _handleGoogleSignIn,
                 iconColor: Colors.white,
               ),
               const SizedBox(width: 24),
               SocialLoginButton(
                 icon: FontAwesomeIcons.apple,
-                onPressed: () {
-                  // TODO: Add Apple login
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Apple login is coming soon")),
-                  );
-                },
+                onPressed: () =>
+                    _showErrorSnackBar('Apple Sign-In not yet implemented'),
                 iconColor: Colors.white,
               ),
             ],
