@@ -175,23 +175,26 @@ class _CustomListDetailScreenState
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // Clear any selections from other screens when this screen is first built
-    Future.microtask(
-      () => ref.read(multiSelectNotifierProvider.notifier).clear(),
-    );
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // Clear any selections from other screens when this screen is first built
+  //   // Future.microtask(
+  //   //   () =>
+  //   // );
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     ref.read(multiSelectNotifierProvider.notifier).clear();
+  //   });
+  // }
 
-  @override
-  void dispose() {
-    // Also clear selections when leaving the screen
-    Future.microtask(
-      () => ref.read(multiSelectNotifierProvider.notifier).clear(),
-    );
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // Also clear selections when leaving the screen
+  //   Future.microtask(
+  //     () => ref.read(multiSelectNotifierProvider.notifier).clear(),
+  //   );
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

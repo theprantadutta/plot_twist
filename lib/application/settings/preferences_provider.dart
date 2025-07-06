@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'preferences_provider.g.dart';
 
 // --- A NEW PROVIDER TO FETCH STREAMING SERVICES ---
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<Map<String, dynamic>>> watchProviders(WatchProvidersRef ref) {
   final region = ref.watch(
     preferencesNotifierProvider.select((p) => p.value?.contentRegion ?? 'US'),
@@ -53,7 +53,7 @@ class PreferencesState {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class PreferencesNotifier extends _$PreferencesNotifier {
   final _service = FirestoreService();
 

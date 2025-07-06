@@ -152,7 +152,7 @@ int tvShowWatchTime(TvShowWatchTimeRef ref) {
 }
 
 // This provider calculates the TOTAL number of watched items by combining movies and shows.
-@riverpod
+@Riverpod(keepAlive: true)
 int totalWatchedCount(TotalWatchedCountRef ref) {
   final movies = ref.watch(watchedMoviesCountProvider).asData?.value ?? 0;
   final shows = ref.watch(watchedTvShowsCountProvider).asData?.value ?? 0;
@@ -160,7 +160,7 @@ int totalWatchedCount(TotalWatchedCountRef ref) {
 }
 
 // This provider calculates the TOTAL watch time in hours.
-@riverpod
+@Riverpod(keepAlive: true)
 int totalWatchTime(TotalWatchTimeRef ref) {
   final movieMinutes = ref.watch(
     movieWatchTimeProvider,

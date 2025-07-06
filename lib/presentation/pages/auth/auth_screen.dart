@@ -298,13 +298,25 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             children: [
               SocialLoginButton(
                 icon: FontAwesomeIcons.google,
-                onPressed: () {},
+                onPressed: () {
+                  // TODO: Add Google login
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Google login is coming soon")),
+                  );
+                },
                 iconColor: Colors.white,
               ),
               const SizedBox(width: 24),
               SocialLoginButton(
                 icon: FontAwesomeIcons.apple,
-                onPressed: () {},
+                onPressed: () {
+                  // TODO: Add Apple login
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Apple login is coming soon")),
+                  );
+                },
                 iconColor: Colors.white,
               ),
             ],

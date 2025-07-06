@@ -39,7 +39,7 @@ class NotificationSettingsState {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class NotificationSettingsNotifier extends _$NotificationSettingsNotifier {
   final _service = FirestoreService();
 

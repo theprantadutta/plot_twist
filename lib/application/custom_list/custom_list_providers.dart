@@ -26,7 +26,7 @@ Stream<DocumentSnapshot> customListStream(
 // The main provider for this screen.
 // It fetches the simple list of item IDs from Firestore, then gets the
 // full, rich details for each item from the TMDB API.
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<Map<String, dynamic>>> customListItemsDetails(
   CustomListItemsDetailsRef ref,
   String listId,
