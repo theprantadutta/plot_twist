@@ -34,9 +34,9 @@ Here are some screenshots from the app:
 
 | Home Screen | Discover | Profile |
 | :---: | :---: | :---: |
-| <img src="./screenshots/home_movie_screenshot_1.jpg" width="250"> | <img src="./screenshots/discover_movie_screenshot_3.jpg" width="250"> | <img src="./screenshots/profile_movie_screenshot_5.jpg" width="250"> |
+| <img src="./screenshots/1_home_movie_screenshot.jpg" width="250"> | <img src="./screenshots/3_discover_movie_screenshot.jpg" width="250"> | <img src="./screenshots/5_profile_movie_screenshot.jpg" width="250"> |
 | **My Lists** | **Watchlist** | **Settings** |
-| <img src="./screenshots/my_list_screenshot_6.jpg" width="250"> | <img src="./screenshots/watchlist_movie_screenshot_4.jpg" width="250"> | <img src="./screenshots/settings_screenshot_9.jpg" width="250"> |
+| <img src="./screenshots/6_my_list_screenshot.jpg" width="250"> | <img src="./screenshots/4_watchlist_movie_screenshot.jpg" width="250"> | <img src="./screenshots/9_settings_screenshot.jpg" width="250"> |
 
 ## 🛠️ Tech Stack & Architecture
 
