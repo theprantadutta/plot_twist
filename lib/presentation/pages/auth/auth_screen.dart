@@ -10,6 +10,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../../data/firestore/firestore_service.dart';
 import '../../core/app_colors.dart';
 import 'widgets/auth_button.dart';
 import 'widgets/auth_text_field.dart';
@@ -110,6 +111,17 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           'email': _signupEmailController.text.trim(),
           'createdAt': FieldValue.serverTimestamp(),
         });
+        // After creating the user, also set their default notification preferences
+        await FirestoreService().updateNotificationSettings({
+          'allNotificationsEnabled': true,
+          'moviePremiereReminders': true,
+          'movieReminderTime': 1,
+          'newEpisodeReminders': true,
+          'trendingReminders': true,
+          'suggestionReminders': true,
+          'dailyMovieMarathon': false, // Off by default
+          'dailyTvPick': false, // Off by default
+        });
         if (mounted) widget.onLoginSuccess();
       }
     } on FirebaseAuthException catch (e) {
@@ -158,6 +170,18 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
           'email': user.email ?? '',
           'avatarUrl': user.photoURL ?? '',
           'createdAt': FieldValue.serverTimestamp(),
+        });
+
+        // After creating the user, set their default notification preferences
+        await FirestoreService().updateNotificationSettings({
+          'allNotificationsEnabled': true,
+          'moviePremiereReminders': true,
+          'movieReminderTime': 1,
+          'newEpisodeReminders': true,
+          'trendingReminders': true,
+          'suggestionReminders': true,
+          'dailyMovieMarathon': false, // Off by default
+          'dailyTvPick': false, // Off by default
         });
       }
 

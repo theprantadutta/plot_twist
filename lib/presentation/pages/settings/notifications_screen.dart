@@ -1,11 +1,10 @@
-// lib/presentation/pages/settings/notifications_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:plot_twist/application/settings/notification_settings_provider.dart';
-import 'package:plot_twist/presentation/core/app_colors.dart';
-import 'package:plot_twist/presentation/pages/settings/widgets/settings_menu_item.dart';
 
+import '../../../application/settings/notification_settings_provider.dart';
+import '../../core/app_colors.dart';
+import 'widgets/settings_menu_item.dart';
 import 'widgets/settings_section.dart';
 
 class NotificationsScreen extends ConsumerWidget {
@@ -22,14 +21,13 @@ class NotificationsScreen extends ConsumerWidget {
         title: const Text("Notifications & Reminders"),
         backgroundColor: AppColors.darkSurface,
       ),
-      // Use the .when to handle loading/error for the initial settings fetch
       body: settingsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, s) => Center(child: Text("Error loading settings: $e")),
         data: (settings) {
-          // Once loaded, we build the UI. All subsequent updates will be seamless.
           final allEnabled = settings.allNotificationsEnabled;
           return SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: 20),
             child: Column(
               children: [
                 // --- MASTER TOGGLE ---
@@ -48,65 +46,121 @@ class NotificationsScreen extends ConsumerWidget {
                   ],
                 ),
 
-                // --- MOVIE REMINDERS SECTION ---
-                // We use Opacity to visually disable the section if the master toggle is off
+                // Use Opacity to visually disable sections if the master toggle is off
                 Opacity(
                   opacity: allEnabled ? 1.0 : 0.5,
-                  child: SettingsSection(
-                    title: "Movie Reminders",
-                    children: [
-                      SwitchListTile(
-                        title: const Text("Movie Premiere Reminders"),
-                        subtitle: const Text(
-                          "When a movie on your watchlist is released.",
-                        ),
-                        value: settings.moviePremiereReminders,
-                        onChanged: allEnabled
-                            ? notifier.setMoviePremiereReminders
-                            : null,
-                        activeColor: AppColors.auroraPink,
-                      ),
-                      const Divider(height: 1, color: AppColors.darkBackground),
-                      SettingsMenuItem(
-                        icon: FontAwesomeIcons.clock,
-                        iconColor: Colors.blue.shade300,
-                        title: "Remind Me",
-                        trailing: Text(
-                          _getReminderText(settings.movieReminderTime),
-                          style: const TextStyle(
-                            color: AppColors.darkTextSecondary,
-                          ),
-                        ),
-                        onTap: allEnabled
-                            ? () => _showReminderTimeDialog(
+                  child: AbsorbPointer(
+                    absorbing: !allEnabled, // Also prevent taps
+                    child: Column(
+                      children: [
+                        // --- PERSONAL ALERTS SECTION ---
+                        SettingsSection(
+                          title: "Personal Alerts",
+                          children: [
+                            SwitchListTile(
+                              title: const Text("Movie Premiere Reminders"),
+                              subtitle: const Text(
+                                "When a movie on your watchlist is released.",
+                              ),
+                              value: settings.moviePremiereReminders,
+                              onChanged: notifier.setMoviePremiereReminders,
+                              activeColor: AppColors.auroraPink,
+                            ),
+                            const Divider(
+                              height: 1,
+                              color: AppColors.darkBackground,
+                            ),
+                            SettingsMenuItem(
+                              icon: FontAwesomeIcons.clock,
+                              iconColor: Colors.blue.shade300,
+                              title: "Remind Me",
+                              trailing: Text(
+                                _getReminderText(settings.movieReminderTime),
+                                style: const TextStyle(
+                                  color: AppColors.darkTextSecondary,
+                                ),
+                              ),
+                              onTap: () => _showReminderTimeDialog(
                                 context,
                                 notifier,
                                 settings.movieReminderTime,
-                              )
-                            : () {},
-                      ),
-                    ],
-                  ),
-                ),
-
-                // --- TV SHOW REMINDERS SECTION ---
-                Opacity(
-                  opacity: allEnabled ? 1.0 : 0.5,
-                  child: SettingsSection(
-                    title: "TV Show Reminders",
-                    children: [
-                      SwitchListTile(
-                        title: const Text("New Episode Reminders"),
-                        subtitle: const Text(
-                          "When a new episode of a show on your watchlist airs.",
+                              ),
+                            ),
+                            const Divider(
+                              height: 1,
+                              color: AppColors.darkBackground,
+                            ),
+                            SwitchListTile(
+                              title: const Text("New Episode Reminders"),
+                              subtitle: const Text(
+                                "When a new episode of a show you follow airs.",
+                              ),
+                              value: settings.newEpisodeReminders,
+                              onChanged: notifier.setNewEpisodeReminders,
+                              activeColor: AppColors.auroraPink,
+                            ),
+                          ],
                         ),
-                        value: settings.newEpisodeReminders,
-                        onChanged: allEnabled
-                            ? notifier.setNewEpisodeReminders
-                            : null,
-                        activeColor: AppColors.auroraPink,
-                      ),
-                    ],
+
+                        // --- DISCOVERY & RECOMMENDATIONS SECTION ---
+                        SettingsSection(
+                          title: "Discovery & Recommendations",
+                          children: [
+                            SwitchListTile(
+                              title: const Text("Trending This Week"),
+                              subtitle: const Text(
+                                "A weekly roundup of what's popular.",
+                              ),
+                              value: settings.trendingReminders,
+                              onChanged: notifier.setTrendingReminders,
+                              activeColor: AppColors.auroraPink,
+                            ),
+                            const Divider(
+                              height: 1,
+                              color: AppColors.darkBackground,
+                            ),
+                            SwitchListTile(
+                              title: const Text("Hidden Gem Suggestions"),
+                              subtitle: const Text(
+                                "Occasional recommendations based on your taste.",
+                              ),
+                              value: settings.suggestionReminders,
+                              onChanged: notifier.setSuggestionReminders,
+                              activeColor: AppColors.auroraPink,
+                            ),
+                          ],
+                        ),
+
+                        // --- NEW DAILY DIGESTS SECTION ---
+                        SettingsSection(
+                          title: "Daily Digests (Opt-In)",
+                          children: [
+                            SwitchListTile(
+                              title: const Text("Daily Movie Marathon"),
+                              subtitle: const Text(
+                                "Get a daily movie suggestion from your watchlist.",
+                              ),
+                              value: settings.dailyMovieMarathon,
+                              onChanged: notifier.setDailyMovieMarathon,
+                              activeColor: AppColors.auroraPink,
+                            ),
+                            const Divider(
+                              height: 1,
+                              color: AppColors.darkBackground,
+                            ),
+                            SwitchListTile(
+                              title: const Text("Daily TV Pick"),
+                              subtitle: const Text(
+                                "Get a suggestion for a TV show you might like.",
+                              ),
+                              value: settings.dailyTvPick,
+                              onChanged: notifier.setDailyTvPick,
+                              activeColor: AppColors.auroraPink,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -139,6 +193,10 @@ class NotificationsScreen extends ConsumerWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: AppColors.darkSurface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: const Text("Set Reminder Time"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -147,6 +205,7 @@ class NotificationsScreen extends ConsumerWidget {
                 title: Text(entry.key),
                 value: entry.value,
                 groupValue: currentSelection,
+                activeColor: AppColors.auroraPink,
                 onChanged: (value) {
                   if (value != null) {
                     notifier.setMovieReminderTime(value);

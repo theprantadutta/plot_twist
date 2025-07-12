@@ -1,17 +1,24 @@
-// lib/application/settings/notification_settings_provider.dart
-import 'package:flutter/foundation.dart';
-import 'package:plot_twist/data/firestore/firestore_service.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../data/firestore/firestore_service.dart';
 
 part 'notification_settings_provider.g.dart';
 
-// A data class to hold our settings state cleanly
+// The data class now holds all our new settings
 @immutable
 class NotificationSettingsState {
   final bool allNotificationsEnabled;
+  // Personal Alerts
   final bool moviePremiereReminders;
-  final int movieReminderTime; // e.g., 0 for on day, 1 for 1 day before
+  final int movieReminderTime;
   final bool newEpisodeReminders;
+  // Discovery & Recommendation Alerts
+  final bool trendingReminders;
+  final bool suggestionReminders;
+  // New Daily Alerts
+  final bool dailyMovieMarathon;
+  final bool dailyTvPick;
 
   // Default values for a new user
   const NotificationSettingsState({
@@ -19,6 +26,11 @@ class NotificationSettingsState {
     this.moviePremiereReminders = true,
     this.movieReminderTime = 1,
     this.newEpisodeReminders = true,
+    this.trendingReminders = true,
+    this.suggestionReminders = true,
+    // The new daily notifications are OFF by default
+    this.dailyMovieMarathon = false,
+    this.dailyTvPick = false,
   });
 
   // Helper to create a copy of the state with new values
@@ -27,6 +39,10 @@ class NotificationSettingsState {
     bool? moviePremiereReminders,
     int? movieReminderTime,
     bool? newEpisodeReminders,
+    bool? trendingReminders,
+    bool? suggestionReminders,
+    bool? dailyMovieMarathon,
+    bool? dailyTvPick,
   }) {
     return NotificationSettingsState(
       allNotificationsEnabled:
@@ -35,11 +51,15 @@ class NotificationSettingsState {
           moviePremiereReminders ?? this.moviePremiereReminders,
       movieReminderTime: movieReminderTime ?? this.movieReminderTime,
       newEpisodeReminders: newEpisodeReminders ?? this.newEpisodeReminders,
+      trendingReminders: trendingReminders ?? this.trendingReminders,
+      suggestionReminders: suggestionReminders ?? this.suggestionReminders,
+      dailyMovieMarathon: dailyMovieMarathon ?? this.dailyMovieMarathon,
+      dailyTvPick: dailyTvPick ?? this.dailyTvPick,
     );
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class NotificationSettingsNotifier extends _$NotificationSettingsNotifier {
   final _service = FirestoreService();
 
@@ -54,6 +74,11 @@ class NotificationSettingsNotifier extends _$NotificationSettingsNotifier {
           moviePremiereReminders: data['moviePremiereReminders'] ?? true,
           movieReminderTime: data['movieReminderTime'] ?? 1,
           newEpisodeReminders: data['newEpisodeReminders'] ?? true,
+          trendingReminders: data['trendingReminders'] ?? true,
+          suggestionReminders: data['suggestionReminders'] ?? true,
+          dailyMovieMarathon:
+              data['dailyMovieMarathon'] ?? false, // Default to false
+          dailyTvPick: data['dailyTvPick'] ?? false, // Default to false
         );
       } else {
         // Return the default state if the document doesn't exist yet
@@ -62,7 +87,7 @@ class NotificationSettingsNotifier extends _$NotificationSettingsNotifier {
     });
   }
 
-  // --- Methods to update specific settings ---
+  // --- Methods to update specific settings in Firestore ---
 
   Future<void> setAllNotifications(bool isEnabled) async {
     await _service.updateNotificationSettings({
@@ -86,5 +111,26 @@ class NotificationSettingsNotifier extends _$NotificationSettingsNotifier {
     await _service.updateNotificationSettings({
       'newEpisodeReminders': isEnabled,
     });
+  }
+
+  Future<void> setTrendingReminders(bool isEnabled) async {
+    await _service.updateNotificationSettings({'trendingReminders': isEnabled});
+  }
+
+  Future<void> setSuggestionReminders(bool isEnabled) async {
+    await _service.updateNotificationSettings({
+      'suggestionReminders': isEnabled,
+    });
+  }
+
+  // New methods for the new daily settings
+  Future<void> setDailyMovieMarathon(bool isEnabled) async {
+    await _service.updateNotificationSettings({
+      'dailyMovieMarathon': isEnabled,
+    });
+  }
+
+  Future<void> setDailyTvPick(bool isEnabled) async {
+    await _service.updateNotificationSettings({'dailyTvPick': isEnabled});
   }
 }
