@@ -23,9 +23,9 @@ class NotificationSettingsState {
   // Default values for a new user
   const NotificationSettingsState({
     this.allNotificationsEnabled = true,
-    this.moviePremiereReminders = true,
+    this.moviePremiereReminders = false,
     this.movieReminderTime = 1,
-    this.newEpisodeReminders = true,
+    this.newEpisodeReminders = false,
     this.trendingReminders = true,
     this.suggestionReminders = true,
     // The new daily notifications are OFF by default
@@ -71,9 +71,9 @@ class NotificationSettingsNotifier extends _$NotificationSettingsNotifier {
         // Create state from Firestore data, providing defaults if fields are missing
         return NotificationSettingsState(
           allNotificationsEnabled: data['allNotificationsEnabled'] ?? true,
-          moviePremiereReminders: data['moviePremiereReminders'] ?? true,
+          moviePremiereReminders: data['moviePremiereReminders'] ?? false,
           movieReminderTime: data['movieReminderTime'] ?? 1,
-          newEpisodeReminders: data['newEpisodeReminders'] ?? true,
+          newEpisodeReminders: data['newEpisodeReminders'] ?? false,
           trendingReminders: data['trendingReminders'] ?? true,
           suggestionReminders: data['suggestionReminders'] ?? true,
           dailyMovieMarathon:

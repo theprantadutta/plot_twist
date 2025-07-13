@@ -114,9 +114,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
         // After creating the user, also set their default notification preferences
         await FirestoreService().updateNotificationSettings({
           'allNotificationsEnabled': true,
-          'moviePremiereReminders': true,
+          'moviePremiereReminders': false,
           'movieReminderTime': 1,
-          'newEpisodeReminders': true,
+          'newEpisodeReminders': false,
           'trendingReminders': true,
           'suggestionReminders': true,
           'dailyMovieMarathon': false, // Off by default
@@ -175,9 +175,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
         // After creating the user, set their default notification preferences
         await FirestoreService().updateNotificationSettings({
           'allNotificationsEnabled': true,
-          'moviePremiereReminders': true,
+          'moviePremiereReminders': false,
           'movieReminderTime': 1,
-          'newEpisodeReminders': true,
+          'newEpisodeReminders': false,
           'trendingReminders': true,
           'suggestionReminders': true,
           'dailyMovieMarathon': false, // Off by default

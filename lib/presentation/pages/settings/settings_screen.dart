@@ -11,6 +11,7 @@ import 'app_and_support_screen.dart';
 import 'legal_document_screen.dart';
 import 'my_preferences_screen.dart';
 import 'notifications_screen.dart';
+import 'widgets/delete_account_dialog.dart';
 import 'widgets/settings_menu_item.dart';
 import 'widgets/settings_section.dart';
 
@@ -54,6 +55,20 @@ class SettingsScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => const SecurityScreen()),
+                    );
+                  },
+                ),
+                const Divider(height: 1, color: AppColors.darkBackground),
+                // --- THIS IS THE NEW MENU ITEM ---
+                SettingsMenuItem(
+                  icon: FontAwesomeIcons.userSlash,
+                  iconColor: AppColors.darkErrorRed,
+                  title: "Delete Account",
+                  subtitle: "Request permanent account deletion",
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const DeleteAccountDialog(),
                     );
                   },
                 ),
