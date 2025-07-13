@@ -111,4 +111,11 @@ class PersistenceService {
   Future<void> setContentRegion(String region) async {
     await _preferences.setString('contentRegion', region);
   }
+
+  bool hasAcceptedTerms() =>
+      _preferences.getBool('hasAcceptedTermsV1') ?? false;
+
+  Future<void> setHasAcceptedTerms(bool hasAccepted) async {
+    await _preferences.setBool('hasAcceptedTermsV1', hasAccepted);
+  }
 }

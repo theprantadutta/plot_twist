@@ -1,10 +1,12 @@
 // lib/presentation/pages/home/home_screen.dart
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 import '../../../../data/tmdb/tmdb_repository.dart';
 import '../../../application/discover/discover_providers.dart';
@@ -12,6 +14,7 @@ import '../../../application/home/home_providers.dart';
 import '../../../data/local/persistence_service.dart';
 import '../../core/app_colors.dart';
 import '../search/search_screen.dart';
+import '../settings/legal_document_screen.dart';
 import 'widgets/empty_watchlist_widget.dart';
 import 'widgets/media_type_toggle.dart';
 import 'widgets/movie_carousel_section.dart';
@@ -60,10 +63,180 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
+  Future<void> _checkForMaintenanceAndAppUpdate() async {
+    debugPrint('Running checkForMaintenanceAndAppUpdate...');
+
+    // A check to ensure the widget is still mounted before showing dialogs.
+    if (!mounted) return;
+
+    try {
+      // --- Step 1: Check for an App Update using the in_app_update package ---
+      // This talks directly to the Google Play Store.
+      debugPrint("Checking for update via in_app_update package...");
+      final AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+
+      // If an update is available...
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        debugPrint("Update available. Starting flexible update flow.");
+
+        // Start a user-friendly flexible update.
+        // This downloads the update in the background while the user can still use the app.
+        await InAppUpdate.startFlexibleUpdate();
+
+        // Once the download is complete, this line will trigger a snackbar
+        // prompting the user to restart the app to complete the installation.
+        await InAppUpdate.completeFlexibleUpdate();
+
+        debugPrint("Flexible update flow completed.");
+      } else {
+        debugPrint("No update available.");
+      }
+
+      // Your old code for manual version comparison is no longer needed for the update check.
+      // The `in_app_update` package handles this automatically.
+    } catch (e) {
+      debugPrint('Something went wrong during the check: $e');
+      // You can optionally show a non-intrusive error message here if needed.
+    }
+  }
+
+  Future<void> _checkAndShowTermsDialog() async {
+    // We now use our Riverpod provider to access the persistence service
+    final persistenceService = ref.read(persistenceServiceProvider);
+
+    if (persistenceService.hasAcceptedTerms()) {
+      return;
+    }
+
+    if (!mounted) return;
+
+    bool isChecked = false;
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor: AppColors.darkSurface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: const Text('Welcome to PlotTwists!'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    const Text(
+                      'Before you begin, please review and accept our policies to continue.',
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          value: isChecked,
+                          onChanged: (bool? value) {
+                            setDialogState(() => isChecked = value ?? false);
+                          },
+                          activeColor: AppColors.auroraPink,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: RichText(
+                              text: TextSpan(
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: AppColors.darkTextSecondary,
+                                    ),
+                                children: [
+                                  const TextSpan(
+                                    text: 'I have read and agree to the ',
+                                  ),
+                                  TextSpan(
+                                    text: 'Terms & Conditions',
+                                    style: const TextStyle(
+                                      color: AppColors.auroraPink,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () =>
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  const LegalDocumentScreen(
+                                                    title: 'Terms & Conditions',
+                                                    markdownAssetPath:
+                                                        'assets/legal/terms.md',
+                                                  ),
+                                            ),
+                                          ),
+                                  ),
+                                  const TextSpan(text: ' and '),
+                                  TextSpan(
+                                    text: 'Privacy Policy',
+                                    style: const TextStyle(
+                                      color: AppColors.auroraPink,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              const LegalDocumentScreen(
+                                                title: 'Privacy Policy',
+                                                markdownAssetPath:
+                                                    'assets/legal/privacy.md',
+                                              ),
+                                        ),
+                                      ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  // The button is disabled until the box is checked
+                  onPressed: isChecked
+                      ? () async {
+                          await persistenceService.setHasAcceptedTerms(true);
+                          Navigator.of(dialogContext).pop();
+                        }
+                      : null,
+                  style: TextButton.styleFrom(
+                    backgroundColor: isChecked
+                        ? AppColors.auroraPink
+                        : AppColors.darkSurface,
+                    foregroundColor: Colors.white,
+                    disabledBackgroundColor: AppColors.darkSurface.withOpacity(
+                      0.5,
+                    ),
+                  ),
+                  child: const Text('Continue'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     FlutterNativeSplash.remove();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _checkForMaintenanceAndAppUpdate();
+      await _checkAndShowTermsDialog();
+    });
   }
 
   // 4. Make sure to cancel the timer and dispose the controller when the screen is removed
