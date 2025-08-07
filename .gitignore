@@ -67,3 +67,5 @@ lib/generated/
 lib/**/*.g.dart
 
 notes.txt
+
+.kiro/
