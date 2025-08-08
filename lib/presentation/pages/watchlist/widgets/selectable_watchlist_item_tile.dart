@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../application/watchlist/multi_select_provider.dart';
+import '../../../../application/watchlist/watchlist_providers.dart';
 import '../../../../data/local/persistence_service.dart';
 import '../../../core/app_colors.dart';
 import '../../detail/movie_detail_screen.dart';

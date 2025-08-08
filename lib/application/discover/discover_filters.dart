@@ -352,6 +352,10 @@ class DiscoverFiltersNotifier extends StateNotifier<DiscoverFilters> {
     state = state.reset();
   }
 
+  void updateFilters(DiscoverFilters newFilters) {
+    state = newFilters;
+  }
+
   void applyPreset(FilterPreset preset) {
     switch (preset) {
       case FilterPreset.popular:

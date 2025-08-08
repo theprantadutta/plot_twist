@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../application/watched/watched_providers.dart';
-import '../../../application/watchlist/multi_select_provider.dart';
+import '../../../application/watchlist/watchlist_providers.dart';
 import '../../../data/firestore/firestore_service.dart';
 import '../../../data/local/persistence_service.dart';
 import '../../core/app_colors.dart';

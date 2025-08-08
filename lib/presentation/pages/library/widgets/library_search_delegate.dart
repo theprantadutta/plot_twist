@@ -102,7 +102,7 @@ class LibrarySearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
               final filteredMovies = _filterMovies(allMovies, query);
 
               if (filteredMovies.isEmpty) {
-                return _buildEmptyState();
+                return _buildEmptyState(context);
               }
 
               return _buildMovieGrid(filteredMovies);
@@ -304,7 +304,7 @@ class LibrarySearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return Container(
       color: AppColors.darkBackground,
       padding: const EdgeInsets.all(20),

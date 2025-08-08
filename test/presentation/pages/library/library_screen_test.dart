@@ -50,28 +50,25 @@ final mockCustomLists = [
   },
 ];
 
+Widget createTestWidget({
+  List<Map<String, dynamic>>? watchlistMovies,
+  List<Map<String, dynamic>>? favoritesMovies,
+  List<Map<String, dynamic>>? watchedMovies,
+  List<Map<String, dynamic>>? customLists,
+}) {
+  return ProviderScope(
+    overrides: [
+      watchlistProvider.overrideWith((ref) async => watchlistMovies ?? []),
+      favoritesProvider.overrideWith((ref) async => favoritesMovies ?? []),
+      watchedProvider.overrideWith((ref) async => watchedMovies ?? []),
+      customListsProvider.overrideWith((ref) async => customLists ?? []),
+    ],
+    child: MaterialApp(theme: AppTheme.darkTheme, home: const LibraryScreen()),
+  );
+}
+
 void main() {
   group('LibraryScreen', () {
-    Widget createTestWidget({
-      List<Map<String, dynamic>>? watchlistMovies,
-      List<Map<String, dynamic>>? favoritesMovies,
-      List<Map<String, dynamic>>? watchedMovies,
-      List<Map<String, dynamic>>? customLists,
-    }) {
-      return ProviderScope(
-        overrides: [
-          watchlistProvider.overrideWith((ref) async => watchlistMovies ?? []),
-          favoritesProvider.overrideWith((ref) async => favoritesMovies ?? []),
-          watchedProvider.overrideWith((ref) async => watchedMovies ?? []),
-          customListsProvider.overrideWith((ref) async => customLists ?? []),
-        ],
-        child: MaterialApp(
-          theme: AppTheme.darkTheme,
-          home: const LibraryScreen(),
-        ),
-      );
-    }
-
     testWidgets('should display library screen with app bar', (tester) async {
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();

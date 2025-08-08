@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../application/watchlist/multi_select_provider.dart';
+import '../../../../application/watchlist/watchlist_providers.dart';
 import '../../../../data/local/persistence_service.dart';
 import '../../home/widgets/poster_card.dart';
 

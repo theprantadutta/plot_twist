@@ -659,8 +659,9 @@ class _AdvancedFiltersSheetState extends ConsumerState<AdvancedFiltersSheet>
             flex: 2,
             child: ElevatedButton(
               onPressed: () {
-                ref.read(discoverFiltersProvider.notifier).state =
-                    _localFilters;
+                ref
+                    .read(discoverFiltersProvider.notifier)
+                    .updateFilters(_localFilters);
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
