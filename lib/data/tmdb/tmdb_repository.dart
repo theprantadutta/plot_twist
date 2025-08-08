@@ -205,6 +205,7 @@ class TmdbRepository {
   Future<List<Map<String, dynamic>>> getDiscoverDeck({
     required MediaType type, // It now requires a type
     int page = 1,
+    List<int>? genreIds, // Add genre filtering support
   }) async {
     try {
       final queryParameters = {
@@ -214,6 +215,12 @@ class TmdbRepository {
         'vote_count.gte': 100,
         'watch_region': 'US',
       };
+
+      // Add genre filtering if provided
+      if (genreIds != null && genreIds.isNotEmpty) {
+        queryParameters['with_genres'] = genreIds.join(',');
+      }
+
       // The path now dynamically uses the type's name ('movie' or 'tv')
       final response = await _dio.get(
         '/discover/${type.name}',
@@ -295,6 +302,23 @@ class TmdbRepository {
       return List<Map<String, dynamic>>.from(response.data['results']);
     } on DioException catch (e) {
       print("Error fetching watch providers: ${e.message}");
+      return [];
+    }
+  }
+
+  /// Get similar content for a given movie or TV show
+  Future<List<Map<String, dynamic>>> getSimilarContent(
+    int id,
+    String mediaType,
+  ) async {
+    try {
+      final response = await _dio.get(
+        '/$mediaType/$id/similar',
+        queryParameters: _apiKeyParam,
+      );
+      return List<Map<String, dynamic>>.from(response.data['results']);
+    } on DioException catch (e) {
+      print("Error fetching similar content for $mediaType/$id: ${e.message}");
       return [];
     }
   }
