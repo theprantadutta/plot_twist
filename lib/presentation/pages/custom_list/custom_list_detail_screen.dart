@@ -203,8 +203,7 @@ class _CustomListDetailScreenState
       customListItemsDetailsProvider(widget.listId),
     );
     final listName =
-        (listDetailsAsync.asData?.value.data()
-            as Map<String, dynamic>?)?['name'] ??
+        (listDetailsAsync.asData?.value.data())?['name'] ??
         'List';
     final selectedItems = ref.watch(multiSelectNotifierProvider);
 

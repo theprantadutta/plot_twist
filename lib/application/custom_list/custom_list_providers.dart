@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Mock provider for custom lists
 final customListsProvider = FutureProvider<List<Map<String, dynamic>>>((

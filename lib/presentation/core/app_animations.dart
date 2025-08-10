@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'performance/performance_integration.dart';
+import 'performance/optimized_animations.dart' hide PageTransitionType;
+
 /// Animation configuration class for consistent motion design
 class AnimationConfig {
   final Duration duration;
@@ -290,16 +293,16 @@ class AnimationTiming {
   static const Curve linear = Curves.linear;
 }
 
-/// Utility class for creating custom animations
+/// Utility class for creating custom animations with performance optimizations
 class AnimationUtils {
-  /// Create a slide transition
+  /// Create an optimized slide transition
   static Widget slideTransition({
     required Widget child,
     required Animation<double> animation,
     Offset begin = const Offset(1.0, 0.0),
     Offset end = Offset.zero,
   }) {
-    return SlideTransition(
+    return OptimizedSlideTransition(
       position: Tween<Offset>(begin: begin, end: end).animate(
         CurvedAnimation(
           parent: animation,
@@ -310,14 +313,14 @@ class AnimationUtils {
     );
   }
 
-  /// Create a fade transition
+  /// Create an optimized fade transition
   static Widget fadeTransition({
     required Widget child,
     required Animation<double> animation,
     double begin = 0.0,
     double end = 1.0,
   }) {
-    return FadeTransition(
+    return OptimizedFadeTransition(
       opacity: Tween<double>(begin: begin, end: end).animate(
         CurvedAnimation(parent: animation, curve: AnimationTiming.gentle),
       ),
@@ -325,14 +328,14 @@ class AnimationUtils {
     );
   }
 
-  /// Create a scale transition
+  /// Create an optimized scale transition
   static Widget scaleTransition({
     required Widget child,
     required Animation<double> animation,
     double begin = 0.0,
     double end = 1.0,
   }) {
-    return ScaleTransition(
+    return OptimizedScaleTransition(
       scale: Tween<double>(begin: begin, end: end).animate(
         CurvedAnimation(parent: animation, curve: AnimationTiming.bouncy),
       ),
@@ -340,26 +343,79 @@ class AnimationUtils {
     );
   }
 
-  /// Create a combined slide and fade transition
+  /// Create an optimized combined slide and fade transition
   static Widget slideFadeTransition({
     required Widget child,
     required Animation<double> animation,
     Offset slideBegin = const Offset(0.0, 0.3),
     double fadeBegin = 0.0,
   }) {
-    return SlideTransition(
+    return OptimizedSlideTransition(
       position: Tween<Offset>(begin: slideBegin, end: Offset.zero).animate(
         CurvedAnimation(
           parent: animation,
           curve: AnimationTiming.standardCurve,
         ),
       ),
-      child: FadeTransition(
+      child: OptimizedFadeTransition(
         opacity: Tween<double>(begin: fadeBegin, end: 1.0).animate(
           CurvedAnimation(parent: animation, curve: AnimationTiming.gentle),
         ),
         child: child,
       ),
+    );
+  }
+
+  /// Create an optimized rotation transition
+  static Widget rotationTransition({
+    required Widget child,
+    required Animation<double> animation,
+    double begin = 0.0,
+    double end = 1.0,
+  }) {
+    return RotationTransition(
+      turns: Tween<double>(begin: begin, end: end).animate(
+        CurvedAnimation(
+          parent: animation,
+          curve: AnimationTiming.standardCurve,
+        ),
+      ),
+      child: child,
+    );
+  }
+
+  /// Create an optimized size transition
+  static Widget sizeTransition({
+    required Widget child,
+    required Animation<double> animation,
+    Axis axis = Axis.vertical,
+  }) {
+    return SizeTransition(
+      sizeFactor: animation,
+      axis: axis,
+      child: child,
+    );
+  }
+
+  /// Get performance-optimized animation duration based on device capabilities
+  static Duration getOptimizedDuration(Duration defaultDuration) {
+    return PerformanceIntegration.instance.getRecommendedAnimationDuration(
+      defaultDuration: defaultDuration,
+    );
+  }
+
+  /// Create a performance-optimized page transition
+  static PageRouteBuilder<T> createOptimizedPageRoute<T>({
+    required Widget page,
+    PageTransitionType transitionType = PageTransitionType.slide,
+    Duration? duration,
+    Curve curve = Curves.easeInOut,
+  }) {
+    return PerformanceIntegration.instance.createOptimizedPageTransition<T>(
+      page: page,
+      transitionType: transitionType,
+      duration: duration ?? getOptimizedDuration(AnimationTiming.moderate),
+      curve: curve,
     );
   }
 }

@@ -108,8 +108,9 @@ class DiscoverFilters {
     if (runtime != null) count++;
     if (selectedLanguages.isNotEmpty) count++;
     if (selectedCountries.isNotEmpty) count++;
-    if (sortBy != SortOption.popularity || sortOrder != SortOrder.descending)
+    if (sortBy != SortOption.popularity || sortOrder != SortOrder.descending) {
       count++;
+    }
     if (includeAdult) count++;
     if (onlyWatchProviders) count++;
     if (selectedWatchProviders.isNotEmpty) count++;
@@ -290,8 +291,9 @@ enum SortOrder {
 }
 
 /// Discover filters notifier
-class DiscoverFiltersNotifier extends StateNotifier<DiscoverFilters> {
-  DiscoverFiltersNotifier() : super(const DiscoverFilters());
+class DiscoverFiltersNotifier extends Notifier<DiscoverFilters> {
+  @override
+  DiscoverFilters build() => const DiscoverFilters();
 
   void updateMediaType(MediaType mediaType) {
     state = state.copyWith(mediaType: mediaType);
@@ -407,10 +409,9 @@ enum FilterPreset {
 }
 
 /// Provider for discover filters
-final discoverFiltersProvider =
-    StateNotifierProvider<DiscoverFiltersNotifier, DiscoverFilters>(
-      (ref) => DiscoverFiltersNotifier(),
-    );
+final discoverFiltersProvider = NotifierProvider<DiscoverFiltersNotifier, DiscoverFilters>(
+  DiscoverFiltersNotifier.new,
+);
 
 /// Provider for available genres
 final availableGenresProvider = FutureProvider.family<List<Genre>, MediaType>((

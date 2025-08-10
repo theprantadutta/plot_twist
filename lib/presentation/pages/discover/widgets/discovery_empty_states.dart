@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../data/local/persistence_service.dart';
 import '../../../core/app_colors.dart';
 import '../../../core/app_typography.dart';
-import '../../../core/app_animations.dart';
 
 /// Engaging empty states for discovery interface with compelling illustrations
 class DiscoveryEmptyStates extends StatefulWidget {

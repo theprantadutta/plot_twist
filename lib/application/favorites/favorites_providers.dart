@@ -20,14 +20,14 @@ final favoritesDetailsProvider = FutureProvider<List<Map<String, dynamic>>>((
 enum FavoritesFilter { all, movies, tvShows }
 
 /// Provider for favorites filter state
-final favoritesFilterNotifierProvider =
-    StateNotifierProvider<FavoritesFilterNotifier, FavoritesFilter>((ref) {
-      return FavoritesFilterNotifier();
-    });
+final favoritesFilterNotifierProvider = NotifierProvider<FavoritesFilterNotifier, FavoritesFilter>(
+  FavoritesFilterNotifier.new,
+);
 
 /// Notifier for managing favorites filter state
-class FavoritesFilterNotifier extends StateNotifier<FavoritesFilter> {
-  FavoritesFilterNotifier() : super(FavoritesFilter.all);
+class FavoritesFilterNotifier extends Notifier<FavoritesFilter> {
+  @override
+  FavoritesFilter build() => FavoritesFilter.all;
 
   void setFilter(FavoritesFilter filter) {
     state = filter;

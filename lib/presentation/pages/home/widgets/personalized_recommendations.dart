@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../application/discover/discover_providers.dart';
 import '../../../../data/local/persistence_service.dart';
 import '../../../../data/tmdb/tmdb_repository.dart';
 import '../../../core/app_colors.dart';

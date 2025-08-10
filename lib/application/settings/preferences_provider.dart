@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:plot_twist/application/discover/discover_providers.dart';
 import 'package:plot_twist/data/firestore/firestore_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'preferences_provider.g.dart';
 
 // --- A NEW PROVIDER TO FETCH STREAMING SERVICES ---
 @Riverpod(keepAlive: true)
-Future<List<Map<String, dynamic>>> watchProviders(WatchProvidersRef ref) {
+Future<List<Map<String, dynamic>>> watchProviders(Ref ref) {
   final region = ref.watch(
     preferencesNotifierProvider.select((p) => p.value?.contentRegion ?? 'US'),
   );

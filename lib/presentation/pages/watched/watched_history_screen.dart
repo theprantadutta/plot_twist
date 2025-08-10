@@ -52,13 +52,12 @@ class _WatchedHistoryScreenState extends ConsumerState<WatchedHistoryScreen> {
     final watchedAsync = ref.watch(watchedDetailsProvider);
     final selectedItems = ref.watch(multiSelectNotifierProvider);
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (_isEditMode) {
+    return PopScope(
+      canPop: !_isEditMode,
+      onPopInvoked: (didPop) {
+        if (!didPop && _isEditMode) {
           _toggleEditMode();
-          return false;
         }
-        return true;
       },
       child: Scaffold(
         backgroundColor: AppColors.darkBackground,

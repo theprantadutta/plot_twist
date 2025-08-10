@@ -48,13 +48,12 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     final filterNotifier = ref.read(favoritesFilterNotifierProvider.notifier);
     final selectedItems = ref.watch(multiSelectNotifierProvider);
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (_isEditMode) {
+    return PopScope(
+      canPop: !_isEditMode,
+      onPopInvoked: (didPop) {
+        if (!didPop && _isEditMode) {
           _toggleEditMode();
-          return false;
         }
-        return true;
       },
       child: Scaffold(
         backgroundColor: AppColors.darkBackground,
@@ -120,8 +119,9 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                       final filteredList = fullList.where((item) {
                         if (currentFilter == FavoritesFilter.all) return true;
                         final isMovie = item.containsKey('title');
-                        if (currentFilter == FavoritesFilter.movies)
+                        if (currentFilter == FavoritesFilter.movies) {
                           return isMovie;
+                        }
                         return !isMovie;
                       }).toList();
 

@@ -20,14 +20,14 @@ final watchlistDetailsProvider = FutureProvider<List<Map<String, dynamic>>>((
 enum WatchlistFilter { all, movies, tvShows }
 
 /// Provider for watchlist filter state
-final watchlistFilterNotifierProvider =
-    StateNotifierProvider<WatchlistFilterNotifier, WatchlistFilter>((ref) {
-      return WatchlistFilterNotifier();
-    });
+final watchlistFilterNotifierProvider = NotifierProvider<WatchlistFilterNotifier, WatchlistFilter>(
+  WatchlistFilterNotifier.new,
+);
 
 /// Notifier for managing watchlist filter state
-class WatchlistFilterNotifier extends StateNotifier<WatchlistFilter> {
-  WatchlistFilterNotifier() : super(WatchlistFilter.all);
+class WatchlistFilterNotifier extends Notifier<WatchlistFilter> {
+  @override
+  WatchlistFilter build() => WatchlistFilter.all;
 
   void setFilter(WatchlistFilter filter) {
     state = filter;
@@ -35,14 +35,14 @@ class WatchlistFilterNotifier extends StateNotifier<WatchlistFilter> {
 }
 
 /// Provider for multi-select state in watchlist
-final multiSelectNotifierProvider =
-    StateNotifierProvider<MultiSelectNotifier, Set<String>>((ref) {
-      return MultiSelectNotifier();
-    });
+final multiSelectNotifierProvider = NotifierProvider<MultiSelectNotifier, Set<String>>(
+  MultiSelectNotifier.new,
+);
 
 /// Notifier for managing multi-select state
-class MultiSelectNotifier extends StateNotifier<Set<String>> {
-  MultiSelectNotifier() : super({});
+class MultiSelectNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() => {};
 
   void toggleSelection(String id) {
     if (state.contains(id)) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plot_twist/application/home/home_providers.dart';
 
+import '../../application/settings/system_theme_listener.dart';
 import '../onboarding/onboarding_screen.dart';
 import 'auth_guard.dart';
 
@@ -17,12 +18,9 @@ class AppEntry extends ConsumerWidget {
     // Check the flag
     final hasSeenOnboarding = persistenceService.hasSeenOnboarding();
 
-    if (hasSeenOnboarding) {
-      // If they've seen it, go to the AuthGuard
-      return const AuthGuard();
-    } else {
-      // If it's their first time, show the OnboardingScreen
-      return const OnboardingScreen();
-    }
+    // Wrap the entire app with system theme listener
+    return SystemThemeListenerWidget(
+      child: hasSeenOnboarding ? const AuthGuard() : const OnboardingScreen(),
+    );
   }
 }

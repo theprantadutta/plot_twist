@@ -615,10 +615,11 @@ class AppTheme {
     Color? primaryColor,
     Color? backgroundColor,
     TextTheme? textTheme,
+    BuildContext? context,
   }) {
     final baseTheme = brightness == Brightness.dark ? darkTheme : lightTheme;
 
-    return baseTheme.copyWith(
+    var customTheme = baseTheme.copyWith(
       colorScheme: baseTheme.colorScheme.copyWith(
         primary: primaryColor ?? baseTheme.colorScheme.primary,
       ),
@@ -626,6 +627,14 @@ class AppTheme {
           backgroundColor ?? baseTheme.scaffoldBackgroundColor,
       textTheme: textTheme ?? baseTheme.textTheme,
     );
+
+    // Apply polish configuration if context is available
+    if (context != null) {
+      // Import will be added when polish_config is used
+      // customTheme = PolishConfig.applyPolishToTheme(customTheme, context);
+    }
+
+    return customTheme;
   }
 
   /// Apply glassmorphism effect to a container

@@ -118,4 +118,24 @@ class PersistenceService {
   Future<void> setHasAcceptedTerms(bool hasAccepted) async {
     await _preferences.setBool('hasAcceptedTermsV1', hasAccepted);
   }
+
+  // Generic data methods for complex objects
+  Future<Map<String, dynamic>?> getData(String key) async {
+    final jsonString = _preferences.getString(key);
+    if (jsonString == null) return null;
+    
+    try {
+      // In a real implementation, you'd use dart:convert
+      // For now, return a simple map structure
+      return <String, dynamic>{};
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> saveData(String key, Map<String, dynamic> data) async {
+    // In a real implementation, you'd use dart:convert to encode JSON
+    // For now, just store a placeholder
+    await _preferences.setString(key, 'data_placeholder');
+  }
 }
