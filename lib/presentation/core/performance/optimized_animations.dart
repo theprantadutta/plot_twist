@@ -17,9 +17,7 @@ class OptimizedAnimationController extends AnimationController {
     required super.vsync,
     super.value,
     String? debugLabel,
-  }) : super(
-         debugLabel: debugLabel ?? animationName,
-       );
+  }) : super(debugLabel: debugLabel ?? animationName);
 
   @override
   TickerFuture forward({double? from}) {
