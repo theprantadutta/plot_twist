@@ -140,6 +140,7 @@ class AuthGuard extends ConsumerWidget {
                 try {
                   await FirebaseAuth.instance.signOut();
                   // Optional: Show a snackbar confirmation
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Theme.of(
@@ -150,6 +151,7 @@ class AuthGuard extends ConsumerWidget {
                     ),
                   );
                 } catch (e) {
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Logout failed: ${e.toString()}'),

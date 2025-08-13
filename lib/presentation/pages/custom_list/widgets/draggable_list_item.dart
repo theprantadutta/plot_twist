@@ -34,6 +34,7 @@ class _DraggableListItemState extends State<DraggableListItem>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
+  // ignore: unused_field
   bool _isPressed = false;
 
   @override

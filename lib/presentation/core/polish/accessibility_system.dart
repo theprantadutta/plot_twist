@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 
-
-
 /// Comprehensive accessibility system for WCAG compliance
 class AccessibilitySystem {
   // --- ACCESSIBILITY CONSTANTS ---
@@ -20,10 +18,17 @@ class AccessibilitySystem {
   // --- COLOR CONTRAST VALIDATION ---
 
   /// Calculate relative luminance of a color
+  // static double _getRelativeLuminance(Color color) {
+  //   final r = _getColorComponent(color.red);
+  //   final g = _getColorComponent(color.green);
+  //   final b = _getColorComponent(color.blue);
+  //   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  // }
+  /// Calculate relative luminance of a color
   static double _getRelativeLuminance(Color color) {
-    final r = _getColorComponent(color.red);
-    final g = _getColorComponent(color.green);
-    final b = _getColorComponent(color.blue);
+    final r = _getColorComponent((color.r * 255.0).round() & 0xff);
+    final g = _getColorComponent((color.g * 255.0).round() & 0xff);
+    final b = _getColorComponent((color.b * 255.0).round() & 0xff);
     return 0.2126 * r + 0.7152 * g + 0.0722 * b;
   }
 
@@ -48,7 +53,9 @@ class AccessibilitySystem {
     bool isLargeText = false,
   }) {
     final ratio = getContrastRatio(foreground, background);
-    final requiredRatio = isLargeText ? minContrastRatioLarge : minContrastRatioNormal;
+    final requiredRatio = isLargeText
+        ? minContrastRatioLarge
+        : minContrastRatioNormal;
     return ratio >= requiredRatio;
   }
 
@@ -56,7 +63,7 @@ class AccessibilitySystem {
   static Color getAccessibleTextColor(Color backgroundColor) {
     final whiteContrast = getContrastRatio(Colors.white, backgroundColor);
     final blackContrast = getContrastRatio(Colors.black, backgroundColor);
-    
+
     return whiteContrast > blackContrast ? Colors.white : Colors.black;
   }
 
@@ -66,10 +73,14 @@ class AccessibilitySystem {
     Color background, {
     bool isLargeText = false,
   }) {
-    if (meetsContrastRequirement(foreground, background, isLargeText: isLargeText)) {
+    if (meetsContrastRequirement(
+      foreground,
+      background,
+      isLargeText: isLargeText,
+    )) {
       return foreground;
     }
-    
+
     // Return high contrast alternative
     return getAccessibleTextColor(background);
   }
@@ -254,10 +265,16 @@ class AccessibilitySystem {
     return Semantics(
       label: label,
       value: semanticFormatterCallback?.call(value) ?? value.toString(),
-      increasedValue: semanticFormatterCallback?.call((value + (max - min) / 10).clamp(min, max)) ?? 
-                     ((value + (max - min) / 10).clamp(min, max)).toString(),
-      decreasedValue: semanticFormatterCallback?.call((value - (max - min) / 10).clamp(min, max)) ?? 
-                     ((value - (max - min) / 10).clamp(min, max)).toString(),
+      increasedValue:
+          semanticFormatterCallback?.call(
+            (value + (max - min) / 10).clamp(min, max),
+          ) ??
+          ((value + (max - min) / 10).clamp(min, max)).toString(),
+      decreasedValue:
+          semanticFormatterCallback?.call(
+            (value - (max - min) / 10).clamp(min, max),
+          ) ??
+          ((value - (max - min) / 10).clamp(min, max)).toString(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -289,14 +306,8 @@ class AccessibilitySystem {
   }
 
   /// Create an auto-focus widget
-  static Widget autoFocus({
-    required Widget child,
-    bool autofocus = true,
-  }) {
-    return Focus(
-      autofocus: autofocus,
-      child: child,
-    );
+  static Widget autoFocus({required Widget child, bool autofocus = true}) {
+    return Focus(autofocus: autofocus, child: child);
   }
 
   // --- SCREEN READER SUPPORT ---
@@ -312,11 +323,7 @@ class AccessibilitySystem {
     String? label,
     bool assertive = false,
   }) {
-    return Semantics(
-      label: label,
-      liveRegion: true,
-      child: child,
-    );
+    return Semantics(label: label, liveRegion: true, child: child);
   }
 
   /// Create a heading for screen reader navigation
@@ -325,20 +332,15 @@ class AccessibilitySystem {
     required TextStyle style,
     int level = 1,
   }) {
-    return Semantics(
-      header: true,
-      child: Text(
-        text,
-        style: style,
-      ),
-    );
+    return Semantics(header: true, child: Text(text, style: style));
   }
 
   // --- VALIDATION HELPERS ---
 
   /// Validate if widget meets minimum touch target size
   static bool validateTouchTargetSize(Size size) {
-    return size.width >= minTouchTargetSize && size.height >= minTouchTargetSize;
+    return size.width >= minTouchTargetSize &&
+        size.height >= minTouchTargetSize;
   }
 
   /// Get accessibility report for a color scheme
@@ -347,21 +349,36 @@ class AccessibilitySystem {
     final warnings = <String>[];
 
     // Check primary color contrast
-    final primaryContrast = getContrastRatio(colorScheme.onPrimary, colorScheme.primary);
+    final primaryContrast = getContrastRatio(
+      colorScheme.onPrimary,
+      colorScheme.primary,
+    );
     if (primaryContrast < minContrastRatioNormal) {
-      issues.add('Primary color contrast ratio ($primaryContrast) is below WCAG AA standard');
+      issues.add(
+        'Primary color contrast ratio ($primaryContrast) is below WCAG AA standard',
+      );
     }
 
     // Check surface color contrast
-    final surfaceContrast = getContrastRatio(colorScheme.onSurface, colorScheme.surface);
+    final surfaceContrast = getContrastRatio(
+      colorScheme.onSurface,
+      colorScheme.surface,
+    );
     if (surfaceContrast < minContrastRatioNormal) {
-      issues.add('Surface color contrast ratio ($surfaceContrast) is below WCAG AA standard');
+      issues.add(
+        'Surface color contrast ratio ($surfaceContrast) is below WCAG AA standard',
+      );
     }
 
     // Check error color contrast
-    final errorContrast = getContrastRatio(colorScheme.onError, colorScheme.error);
+    final errorContrast = getContrastRatio(
+      colorScheme.onError,
+      colorScheme.error,
+    );
     if (errorContrast < minContrastRatioNormal) {
-      issues.add('Error color contrast ratio ($errorContrast) is below WCAG AA standard');
+      issues.add(
+        'Error color contrast ratio ($errorContrast) is below WCAG AA standard',
+      );
     }
 
     return AccessibilityReport(
@@ -407,21 +424,21 @@ class AccessibilityReport {
     final buffer = StringBuffer();
     buffer.writeln('Accessibility Report:');
     buffer.writeln('Compliant: $isCompliant');
-    
+
     if (issues.isNotEmpty) {
       buffer.writeln('\nIssues:');
       for (final issue in issues) {
         buffer.writeln('- $issue');
       }
     }
-    
+
     if (warnings.isNotEmpty) {
       buffer.writeln('\nWarnings:');
       for (final warning in warnings) {
         buffer.writeln('- $warning');
       }
     }
-    
+
     return buffer.toString();
   }
 }

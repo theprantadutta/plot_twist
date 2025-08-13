@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../app_colors.dart';
@@ -31,8 +32,8 @@ class _CinematicRefreshIndicatorState extends State<CinematicRefreshIndicator>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late AnimationController _scaleController;
-  late Animation<double> _rotationAnimation;
-  late Animation<double> _scaleAnimation;
+  // late Animation<double> _rotationAnimation;
+  // late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -51,14 +52,14 @@ class _CinematicRefreshIndicatorState extends State<CinematicRefreshIndicator>
       vsync: this,
     );
 
-    _rotationAnimation = Tween<double>(
-      begin: 0.0,
-      end: 2.0 * math.pi,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
+    // _rotationAnimation = Tween<double>(
+    //   begin: 0.0,
+    //   end: 2.0 * math.pi,
+    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _scaleController, curve: Curves.easeOutBack),
-    );
+    // _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    //   CurvedAnimation(parent: _scaleController, curve: Curves.easeOutBack),
+    // );
   }
 
   @override
@@ -117,7 +118,7 @@ class _MovieReelRefreshIndicatorState extends State<MovieReelRefreshIndicator>
     with TickerProviderStateMixin {
   late AnimationController _pullController;
   late AnimationController _refreshController;
-  late Animation<double> _pullAnimation;
+  // late Animation<double> _pullAnimation;
   late Animation<double> _rotationAnimation;
 
   bool _isRefreshing = false;
@@ -139,9 +140,9 @@ class _MovieReelRefreshIndicatorState extends State<MovieReelRefreshIndicator>
       vsync: this,
     );
 
-    _pullAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _pullController, curve: Curves.easeOutCubic),
-    );
+    // _pullAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    //   CurvedAnimation(parent: _pullController, curve: Curves.easeOutCubic),
+    // );
 
     _rotationAnimation = Tween<double>(begin: 0.0, end: 2.0 * math.pi).animate(
       CurvedAnimation(parent: _refreshController, curve: Curves.linear),
@@ -292,8 +293,8 @@ class _GoldenGlowRefreshIndicatorState extends State<GoldenGlowRefreshIndicator>
     with TickerProviderStateMixin {
   late AnimationController _glowController;
   late AnimationController _textController;
-  late Animation<double> _glowAnimation;
-  late Animation<double> _textOpacityAnimation;
+  // late Animation<double> _glowAnimation;
+  // late Animation<double> _textOpacityAnimation;
 
   @override
   void initState() {
@@ -312,14 +313,14 @@ class _GoldenGlowRefreshIndicatorState extends State<GoldenGlowRefreshIndicator>
       vsync: this,
     );
 
-    _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
-    );
+    // _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    //   CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
+    // );
 
-    _textOpacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _textController, curve: Curves.easeOut));
+    // _textOpacityAnimation = Tween<double>(
+    //   begin: 0.0,
+    //   end: 1.0,
+    // ).animate(CurvedAnimation(parent: _textController, curve: Curves.easeOut));
   }
 
   @override

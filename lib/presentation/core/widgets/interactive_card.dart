@@ -151,11 +151,11 @@ class _InteractiveCardState extends State<InteractiveCard>
     widget.onTap?.call();
   }
 
-  void _handleLongPress() {
-    if (widget.isDisabled) return;
-    HapticFeedback.mediumImpact();
-    widget.onLongPress?.call();
-  }
+  // void _handleLongPress() {
+  //   if (widget.isDisabled) return;
+  //   HapticFeedback.mediumImpact();
+  //   widget.onLongPress?.call();
+  // }
 
   void _handleHover(bool isHovered) {
     if (widget.isDisabled) return;

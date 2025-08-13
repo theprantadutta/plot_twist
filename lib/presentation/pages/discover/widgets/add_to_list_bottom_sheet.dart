@@ -38,7 +38,7 @@ class AddToListBottomSheet extends ConsumerWidget {
         height: MediaQuery.of(context).size.height * 0.6,
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface.withOpacity(0.95),
+          color: AppColors.darkSurface.withValues(alpha: 0.95),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(

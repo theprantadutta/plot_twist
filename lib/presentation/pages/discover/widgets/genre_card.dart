@@ -15,7 +15,7 @@ class GenreCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -36,7 +36,7 @@ class GenreCard extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.black.withOpacity(0.7), Colors.transparent],
+                  colors: [Colors.black.withValues(alpha: 0.7), Colors.transparent],
                   begin: Alignment.center,
                   end: Alignment.topCenter,
                 ),

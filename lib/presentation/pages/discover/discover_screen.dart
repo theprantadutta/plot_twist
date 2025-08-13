@@ -185,7 +185,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
         shape: BoxShape.circle,
         color: AppColors.darkSurface,
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 10),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 10),
         ],
       ),
       child: IconButton(

@@ -48,8 +48,8 @@ class SelectableItemCard extends ConsumerWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 color: isSelected
-                    ? Theme.of(context).primaryColor.withOpacity(0.6)
-                    : Colors.black.withOpacity(0.3),
+                    ? Theme.of(context).primaryColor.withValues(alpha: 0.6)
+                    : Colors.black.withValues(alpha: 0.3),
               ),
               child: isSelected
                   ? const Icon(

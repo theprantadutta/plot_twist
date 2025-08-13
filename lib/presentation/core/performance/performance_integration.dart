@@ -172,6 +172,7 @@ class PerformanceIntegration {
     _animationMonitor.stopMonitoring();
     _memoryOptimizer.stopMonitoring();
     // Clean up image cache optimizer
+    _benchmarks.clearBenchmarks();
 
     _initialized = false;
   }

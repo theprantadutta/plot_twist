@@ -31,10 +31,10 @@ class ActionButtonBar extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface.withOpacity(0.5),
+        color: AppColors.darkSurface.withValues(alpha: 0.5),
         border: Border(
-          top: BorderSide(color: Colors.white.withOpacity(0.1)),
-          bottom: BorderSide(color: Colors.white.withOpacity(0.1)),
+          top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          bottom: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
       ),
       child: Row(

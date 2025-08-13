@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/app_animations.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_typography.dart';
-import '../../core/app_animations.dart';
 import 'create_custom_list_screen.dart';
 import 'widgets/draggable_list_item.dart';
 import 'widgets/empty_list_state.dart';
@@ -31,6 +31,7 @@ class _CustomListDisplayScreenState
 
   bool _isGridView = true;
   bool _isEditMode = false;
+  // ignore: unused_field
   final bool _isReordering = false;
   List<Map<String, dynamic>> _listItems = [];
   CustomListTheme? _currentTheme;

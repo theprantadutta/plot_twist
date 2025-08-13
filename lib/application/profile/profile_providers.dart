@@ -2,7 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../watched/watched_providers.dart';
 
@@ -14,10 +13,7 @@ typedef CustomListDetails = ({int itemCount, List<String> posterPaths});
 // --- THIS IS THE NEW PROVIDER ---
 // Given a listId, it fetches the item count and first 4 posters.
 @Riverpod(keepAlive: true)
-Future<CustomListDetails> customListDetails(
-  Ref ref,
-  String listId,
-) async {
+Future<CustomListDetails> customListDetails(Ref ref, String listId) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) {
     throw Exception("User not logged in");
@@ -86,9 +82,7 @@ Stream<int> watchlistTvShowsCount(Ref ref) {
 
 // Provider for the user's custom lists
 @Riverpod(keepAlive: true)
-Stream<List<QueryDocumentSnapshot>> customListsStream(
-  Ref ref,
-) {
+Stream<List<QueryDocumentSnapshot>> customListsStream(Ref ref) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return Stream.value([]);
 
@@ -102,9 +96,7 @@ Stream<List<QueryDocumentSnapshot>> customListsStream(
 
 // --- Keep the existing provider for user details ---
 @Riverpod(keepAlive: true)
-Stream<DocumentSnapshot<Map<String, dynamic>>> userDocumentStream(
-  Ref ref,
-) {
+Stream<DocumentSnapshot<Map<String, dynamic>>> userDocumentStream(Ref ref) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return Stream.empty();
   return FirebaseFirestore.instance.collection('users').doc(userId).snapshots();

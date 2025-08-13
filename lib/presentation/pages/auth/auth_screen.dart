@@ -216,7 +216,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
               ),
             ),
           ).animate().fadeIn(duration: 1500.ms),
-          Container(color: Colors.black.withOpacity(0.6)),
+          Container(color: Colors.black.withValues(alpha: 0.6)),
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -241,10 +241,10 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                               horizontal: 16.0,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.05),
+                              color: Colors.white.withValues(alpha: 0.05),
                               borderRadius: BorderRadius.circular(24),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.1),
+                                color: Colors.white.withValues(alpha: 0.1),
                               ),
                             ),
                             child: Column(
@@ -291,7 +291,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   Widget _buildAuthToggleSwitch() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: Colors.black.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -320,7 +320,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
               title,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.white.withOpacity(isSelected ? 1.0 : 0.7),
+                color: Colors.white.withValues(alpha: isSelected ? 1.0 : 0.7),
               ),
             ),
           ),

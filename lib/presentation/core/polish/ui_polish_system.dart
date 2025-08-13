@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../app_colors.dart';
-
 import '../performance/performance_integration.dart';
 
 /// Comprehensive UI polish system for final refinements
 class UIPolishSystem {
   static UIPolishSystem? _instance;
   static UIPolishSystem get instance => _instance ??= UIPolishSystem._();
-  
+
   UIPolishSystem._();
 
   // --- VISUAL CONSISTENCY CONSTANTS ---
-  
+
   /// Standard spacing scale for consistent layout
   static const double spacingXS = 4.0;
   static const double spacingS = 8.0;
@@ -57,11 +56,16 @@ class UIPolishSystem {
   // --- REFINED ANIMATION DURATIONS ---
 
   /// Polished timing for different interaction types
-  static Duration get microDuration => _getOptimizedDuration(const Duration(milliseconds: 100));
-  static Duration get quickDuration => _getOptimizedDuration(const Duration(milliseconds: 200));
-  static Duration get standardDuration => _getOptimizedDuration(const Duration(milliseconds: 300));
-  static Duration get moderateDuration => _getOptimizedDuration(const Duration(milliseconds: 400));
-  static Duration get slowDuration => _getOptimizedDuration(const Duration(milliseconds: 600));
+  static Duration get microDuration =>
+      _getOptimizedDuration(const Duration(milliseconds: 100));
+  static Duration get quickDuration =>
+      _getOptimizedDuration(const Duration(milliseconds: 200));
+  static Duration get standardDuration =>
+      _getOptimizedDuration(const Duration(milliseconds: 300));
+  static Duration get moderateDuration =>
+      _getOptimizedDuration(const Duration(milliseconds: 400));
+  static Duration get slowDuration =>
+      _getOptimizedDuration(const Duration(milliseconds: 600));
 
   static Duration _getOptimizedDuration(Duration baseDuration) {
     return PerformanceIntegration.instance.getRecommendedAnimationDuration(
@@ -220,10 +224,7 @@ class UIPolishSystem {
     double minSize = 48.0,
   }) {
     return ConstrainedBox(
-      constraints: BoxConstraints(
-        minWidth: minSize,
-        minHeight: minSize,
-      ),
+      constraints: BoxConstraints(minWidth: minSize, minHeight: minSize),
       child: child,
     );
   }
@@ -266,19 +267,9 @@ class UIPolishSystem {
 
 // --- ENUMS ---
 
-enum TransitionType {
-  fade,
-  slideFromRight,
-  slideFromBottom,
-  scale,
-}
+enum TransitionType { fade, slideFromRight, slideFromBottom, scale }
 
-enum FeedbackType {
-  light,
-  medium,
-  heavy,
-  selection,
-}
+enum FeedbackType { light, medium, heavy, selection }
 
 // --- POLISHED COMPONENTS ---
 
@@ -315,13 +306,12 @@ class _PolishedButtonState extends State<_PolishedButton>
       duration: UIPolishSystem.microDuration,
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: UIPolishSystem.cinematicEase,
-    ));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: UIPolishSystem.cinematicEase,
+      ),
+    );
   }
 
   @override
@@ -343,7 +333,9 @@ class _PolishedButtonState extends State<_PolishedButton>
                     onPressed: widget.isLoading ? null : _handlePress,
                     icon: widget.isLoading
                         ? UIPolishSystem.polishedLoadingIndicator(size: 16)
-                        : (widget.icon != null ? Icon(widget.icon) : const SizedBox.shrink()),
+                        : (widget.icon != null
+                              ? Icon(widget.icon)
+                              : const SizedBox.shrink()),
                     label: Text(widget.text),
                     style: widget.style,
                   )
@@ -351,7 +343,9 @@ class _PolishedButtonState extends State<_PolishedButton>
                     onPressed: widget.isLoading ? null : _handlePress,
                     icon: widget.isLoading
                         ? UIPolishSystem.polishedLoadingIndicator(size: 16)
-                        : (widget.icon != null ? Icon(widget.icon) : const SizedBox.shrink()),
+                        : (widget.icon != null
+                              ? Icon(widget.icon)
+                              : const SizedBox.shrink()),
                     label: Text(widget.text),
                     style: widget.style,
                   ),
@@ -408,13 +402,16 @@ class _PolishedCardState extends State<_PolishedCard>
       duration: UIPolishSystem.quickDuration,
       vsync: this,
     );
-    _elevationAnimation = Tween<double>(
-      begin: widget.elevation ?? UIPolishSystem.elevationM,
-      end: (widget.elevation ?? UIPolishSystem.elevationM) + 4,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: UIPolishSystem.cinematicEase,
-    ));
+    _elevationAnimation =
+        Tween<double>(
+          begin: widget.elevation ?? UIPolishSystem.elevationM,
+          end: (widget.elevation ?? UIPolishSystem.elevationM) + 4,
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: UIPolishSystem.cinematicEase,
+          ),
+        );
   }
 
   @override
@@ -436,13 +433,18 @@ class _PolishedCardState extends State<_PolishedCard>
             child: Card(
               elevation: _elevationAnimation.value,
               color: widget.color,
-              margin: widget.margin ?? const EdgeInsets.all(UIPolishSystem.spacingS),
+              margin:
+                  widget.margin ??
+                  const EdgeInsets.all(UIPolishSystem.spacingS),
               shape: RoundedRectangleBorder(
-                borderRadius: widget.borderRadius ?? 
+                borderRadius:
+                    widget.borderRadius ??
                     BorderRadius.circular(UIPolishSystem.radiusL),
               ),
               child: Padding(
-                padding: widget.padding ?? const EdgeInsets.all(UIPolishSystem.spacingM),
+                padding:
+                    widget.padding ??
+                    const EdgeInsets.all(UIPolishSystem.spacingM),
                 child: widget.child,
               ),
             ),
@@ -456,8 +458,8 @@ class _PolishedCardState extends State<_PolishedCard>
     setState(() {
       _isHovered = isHovered;
     });
-    
-    if (isHovered) {
+
+    if (_isHovered) {
       _animationController.forward();
     } else {
       _animationController.reverse();
@@ -518,7 +520,7 @@ class _PolishedTextFieldState extends State<_PolishedTextField>
       parent: _animationController,
       curve: UIPolishSystem.cinematicEase,
     );
-    
+
     _focusNode.addListener(_handleFocusChange);
   }
 
@@ -560,8 +562,8 @@ class _PolishedTextFieldState extends State<_PolishedTextField>
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(UIPolishSystem.radiusM),
               borderSide: BorderSide(
-                color: AppColors.cinematicGold.withOpacity(
-                  0.3 + (_focusAnimation.value * 0.7),
+                color: AppColors.cinematicGold.withValues(
+                  alpha: 0.3 + (_focusAnimation.value * 0.7),
                 ),
                 width: 1 + (_focusAnimation.value * 1),
               ),
@@ -585,7 +587,8 @@ class _PolishedLoadingIndicator extends StatefulWidget {
   });
 
   @override
-  State<_PolishedLoadingIndicator> createState() => _PolishedLoadingIndicatorState();
+  State<_PolishedLoadingIndicator> createState() =>
+      _PolishedLoadingIndicatorState();
 }
 
 class _PolishedLoadingIndicatorState extends State<_PolishedLoadingIndicator>

@@ -148,7 +148,7 @@ class PolishConfig {
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
+          color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
           blurRadius: (customElevation ?? elevation['medium']!) * 2,
           offset: Offset(0, customElevation ?? elevation['medium']!),
         ),

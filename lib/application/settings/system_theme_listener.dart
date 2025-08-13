@@ -20,6 +20,7 @@ class SystemThemeListener {
 
   /// Check for system theme changes and update if necessary
   void checkForSystemThemeChange(BuildContext context) {
+    if (!context.mounted || !_ref.mounted) return;
     final currentSystemBrightness = MediaQuery.of(context).platformBrightness;
     final appearanceState = _ref.read(appearanceNotifierProvider);
 

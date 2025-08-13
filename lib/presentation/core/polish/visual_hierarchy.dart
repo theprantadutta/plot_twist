@@ -45,7 +45,7 @@ class VisualHierarchy {
   static TextStyle bodyTextSecondary(BuildContext context) {
     return Theme.of(context).textTheme.bodyMedium!.copyWith(
       height: 1.5,
-      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
     );
   }
 
@@ -54,7 +54,7 @@ class VisualHierarchy {
     return Theme.of(context).textTheme.bodySmall!.copyWith(
       height: 1.4,
       letterSpacing: 0.4,
-      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
     );
   }
 
@@ -118,17 +118,17 @@ class VisualHierarchy {
 
   /// Secondary content color
   static Color secondaryContent(BuildContext context) {
-    return Theme.of(context).colorScheme.onSurface.withOpacity(0.7);
+    return Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7);
   }
 
   /// Tertiary content color
   static Color tertiaryContent(BuildContext context) {
-    return Theme.of(context).colorScheme.onSurface.withOpacity(0.5);
+    return Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5);
   }
 
   /// Disabled content color
   static Color disabledContent(BuildContext context) {
-    return Theme.of(context).colorScheme.onSurface.withOpacity(0.38);
+    return Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38);
   }
 
   /// Accent color for highlights
@@ -377,7 +377,7 @@ class VisualHierarchy {
             Text(
               subtitle,
               style: bodyText(context).copyWith(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 shadows: [
                   const Shadow(
                     offset: Offset(0, 1),
