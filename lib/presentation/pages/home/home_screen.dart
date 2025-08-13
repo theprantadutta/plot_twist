@@ -20,6 +20,9 @@ import 'widgets/media_type_toggle.dart';
 import 'widgets/movie_carousel_section.dart';
 import 'widgets/shimmer_loaders.dart';
 import 'widgets/spotlight_card.dart';
+import '../../core/widgets/cinematic_hero_card.dart';
+import '../../core/widgets/library_section_card.dart';
+import '../../core/widgets/skeleton_loading.dart';
 
 // Now a ConsumerWidget to use Riverpod
 class HomeScreen extends ConsumerStatefulWidget {
@@ -316,9 +319,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   return PageView.builder(
                     controller: _spotlightController,
                     itemCount: pageCount,
-                    itemBuilder: (context, index) => SpotlightCard(
+                    itemBuilder: (context, index) => CinematicHeroCard(
                       movie: items[index],
-                      mediaType: selectedType,
                     ),
                   );
                 },

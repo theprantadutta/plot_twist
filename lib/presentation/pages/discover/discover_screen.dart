@@ -10,6 +10,8 @@ import '../../../data/firestore/firestore_service.dart';
 import '../../core/app_colors.dart';
 import '../home/widgets/media_type_toggle.dart';
 import 'widgets/movie_info_card.dart';
+import '../../core/widgets/swipe_discovery_card.dart';
+import '../../core/widgets/cinematic_app_bar.dart';
 
 class DiscoverScreen extends ConsumerStatefulWidget {
   const DiscoverScreen({super.key});
@@ -127,7 +129,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                         horizontalThresholdPercentage,
                         verticalThresholdPercentage,
                       ) {
-                        return MovieInfoCard(movie: movies[index]);
+                        return SwipeDiscoveryCard(movie: movies[index]);
                       },
                 ),
               ),

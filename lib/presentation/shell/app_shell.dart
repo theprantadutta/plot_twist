@@ -5,6 +5,7 @@ import '../pages/home/home_screen.dart';
 import '../pages/profile/profile_screen.dart';
 import '../pages/watchlist/watchlist_screen.dart';
 import 'widgets/custom_bottom_nav_bar.dart';
+import '../core/widgets/glassmorphism_bottom_navigation.dart';
 
 class AppShell extends StatefulWidget {
   final bool isDarkMode;
@@ -58,9 +59,31 @@ class _AppShellState extends State<AppShell> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: CustomBottomNavBar(
+              child: GlassmorphismBottomNavigation(
                 selectedIndex: _selectedIndex,
                 onItemTapped: _onItemTapped,
+                destinations: const [
+                  AppNavigationDestination(
+                    icon: Icon(Icons.home_outlined),
+                    selectedIcon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  AppNavigationDestination(
+                    icon: Icon(Icons.explore_outlined),
+                    selectedIcon: Icon(Icons.explore),
+                    label: 'Discover',
+                  ),
+                  AppNavigationDestination(
+                    icon: Icon(Icons.video_library_outlined),
+                    selectedIcon: Icon(Icons.video_library),
+                    label: 'Library',
+                  ),
+                  AppNavigationDestination(
+                    icon: Icon(Icons.person_outline),
+                    selectedIcon: Icon(Icons.person),
+                    label: 'Profile',
+                  ),
+                ],
               ),
             ),
           ],

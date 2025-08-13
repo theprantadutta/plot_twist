@@ -11,6 +11,8 @@ import 'widgets/create_list_dialog.dart';
 import 'widgets/favorites_preview_section.dart';
 import 'widgets/my_lists_component.dart';
 import 'widgets/stat_grid.dart';
+import 'widgets/profile_stats_dashboard.dart';
+import 'widgets/achievement_badge_system.dart';
 
 class ProfileScreen extends ConsumerWidget {
   final VoidCallback onLogout;
@@ -108,8 +110,15 @@ class ProfileScreen extends ConsumerWidget {
 
               const SizedBox(height: 24),
 
-              // Grid of User Statistics
-              const StatGrid(),
+              // Enhanced Profile Statistics Dashboard
+              ProfileStatsDashboard(
+                userStats: const {
+                  'moviesWatched': 0,
+                  'tvShowsWatched': 0,
+                  'totalHours': 0,
+                  'favoriteGenres': <String>[],
+                },
+              ),
 
               const SizedBox(height: 24),
               const FavoritesPreviewSection(),

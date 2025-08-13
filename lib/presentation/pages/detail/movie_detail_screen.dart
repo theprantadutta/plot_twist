@@ -12,6 +12,9 @@ import 'widgets/cast_and_crew_section.dart';
 import 'widgets/detail_header.dart';
 import 'widgets/info_panel.dart';
 import 'widgets/movie_detail_shimmer.dart';
+import 'widgets/enhanced_detail_hero_section.dart';
+import 'widgets/enhanced_cast_and_crew_section.dart';
+import 'widgets/interactive_elements_section.dart';
 
 class MovieDetailScreen extends ConsumerWidget {
   final int mediaId;
