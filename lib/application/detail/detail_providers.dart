@@ -1,7 +1,6 @@
 // lib/application/detail/detail_providers.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/local/persistence_service.dart';
@@ -32,7 +31,7 @@ Stream<bool> isMediaInWatchlist(Ref ref, int mediaId) {
     return Stream.value(false);
   }
 
-  // Point to the specific document in the watchlist subcollection
+  // Point to the specific document in the watchlist sub-collection
   final docRef = FirebaseFirestore.instance
       .collection('users')
       .doc(userId)
@@ -100,10 +99,7 @@ Stream<bool> isMediaInCustomList(
 }
 
 @Riverpod(keepAlive: true)
-Future<Map<String, dynamic>> seasonDetails(
-  Ref ref,
-  SeasonIdentifier season,
-) {
+Future<Map<String, dynamic>> seasonDetails(Ref ref, SeasonIdentifier season) {
   final repo = ref.watch(tmdbRepositoryProvider);
   return repo.getSeasonDetails(
     tvId: season.tvId,

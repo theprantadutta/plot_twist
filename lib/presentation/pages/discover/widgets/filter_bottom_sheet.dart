@@ -32,7 +32,7 @@ class FilterBottomSheet extends ConsumerWidget {
       child: Container(
         height: MediaQuery.of(context).size.height * 0.7,
         decoration: BoxDecoration(
-          color: AppColors.darkSurface.withOpacity(0.9),
+          color: AppColors.darkSurface.withValues(alpha: 0.9),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -74,7 +74,7 @@ class FilterBottomSheet extends ConsumerWidget {
                               ? AppColors.auroraGradient
                               : null,
                           border: Border.all(
-                            color: AppColors.auroraPink.withOpacity(0.5),
+                            color: AppColors.auroraPink.withValues(alpha: 0.5),
                           ),
                           color: isSelected ? null : Colors.transparent,
                         ),

@@ -415,7 +415,7 @@ Frame Rate Stats:
 
 /// Performance test suite
 class PerformanceTestSuite {
-  static final _benchmarks = PerformanceBenchmarks();
+  // static final _benchmarks = PerformanceBenchmarks();
   static final _frameMonitor = FrameRateMonitor();
 
   /// Run comprehensive performance tests
@@ -493,7 +493,8 @@ class PerformanceTestSuite {
     final stopwatch = Stopwatch()..start();
 
     // Simulate list item creation
-    final items = List.generate(itemCount, (index) => 'Item $index');
+    // final items = List.generate(itemCount, (index) => 'Item $index');
+    List.generate(itemCount, (index) => 'Item $index');
 
     stopwatch.stop();
 

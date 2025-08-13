@@ -5,13 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'performance_service.g.dart';
 
 /// Service for monitoring and optimizing app performance
 class PerformanceService {
-  static const int _targetFps = 60;
+  // static const int _targetFps = 60;
   static const Duration _frameTime = Duration(
     microseconds: 16667,
   ); // 60fps = 16.67ms per frame

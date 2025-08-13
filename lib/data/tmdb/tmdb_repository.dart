@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import '../core/api_constants.dart';
 import '../local/persistence_service.dart';
@@ -20,7 +21,7 @@ class TmdbRepository {
       final response = await _dio.get(path, queryParameters: _apiKeyParam);
       return List<Map<String, dynamic>>.from(response.data['results']);
     } on DioException catch (e) {
-      print("Error fetching media list from $path: ${e.message}");
+      debugPrint("Error fetching media list from $path: ${e.message}");
       return [];
     }
   }
@@ -64,7 +65,7 @@ class TmdbRepository {
     if (user == null) return [];
 
     try {
-      // Assuming you store watchlist items in a subcollection like: /users/{uid}/watchlist/{docId}
+      // Assuming you store watchlist items in a sub-collection like: /users/{uid}/watchlist/{docId}
       // where each document has a 'tmdb_id' and 'type' ('movie' or 'tv') field.
       final watchlistSnapshot = await _firestore
           .collection('users')
@@ -90,7 +91,7 @@ class TmdbRepository {
           .cast<Map<String, dynamic>>()
           .toList();
     } catch (e) {
-      print("Error fetching watchlist: $e");
+      debugPrint("Error fetching watchlist: $e");
       return [];
     }
   }
@@ -103,7 +104,7 @@ class TmdbRepository {
       );
       return response.data;
     } catch (e) {
-      print("Error fetching details for $type/$id: $e");
+      debugPrint("Error fetching details for $type/$id: $e");
       return null;
     }
   }
@@ -129,7 +130,7 @@ class TmdbRepository {
       );
       return List<Map<String, dynamic>>.from(response.data['results']);
     } on DioException catch (e) {
-      print("Error discovering media: ${e.message}");
+      debugPrint("Error discovering media: ${e.message}");
       return [];
     }
   }
@@ -148,7 +149,7 @@ class TmdbRepository {
       );
       return List<Map<String, dynamic>>.from(response.data['results']);
     } on DioException catch (e) {
-      print("Error searching media: ${e.message}");
+      debugPrint("Error searching media: ${e.message}");
       return [];
     }
   }
@@ -162,7 +163,7 @@ class TmdbRepository {
       );
       return List<Map<String, dynamic>>.from(response.data['genres']);
     } on DioException catch (e) {
-      print("Error fetching genres: ${e.message}");
+      debugPrint("Error fetching genres: ${e.message}");
       return [];
     }
   }
@@ -176,7 +177,7 @@ class TmdbRepository {
       );
       return List<Map<String, dynamic>>.from(response.data['results']);
     } on DioException catch (e) {
-      print("Error fetching popular people: ${e.message}");
+      debugPrint("Error fetching popular people: ${e.message}");
       return [];
     }
   }
@@ -197,7 +198,7 @@ class TmdbRepository {
   //     );
   //     return List<Map<String, dynamic>>.from(response.data['results']);
   //   } on DioException catch (e) {
-  //     print("Error fetching discover deck: ${e.message}");
+  //     debugPrint("Error fetching discover deck: ${e.message}");
   //     return [];
   //   }
   // }
@@ -228,7 +229,7 @@ class TmdbRepository {
       );
       return List<Map<String, dynamic>>.from(response.data['results']);
     } on DioException catch (e) {
-      print("Error fetching discover deck: ${e.message}");
+      debugPrint("Error fetching discover deck: ${e.message}");
       return [];
     }
   }
@@ -244,7 +245,7 @@ class TmdbRepository {
       );
       return response.data as Map<String, dynamic>;
     } catch (e) {
-      print("Error fetching details for $type/$id: $e");
+      debugPrint("Error fetching details for $type/$id: $e");
       return null;
     }
   }
@@ -267,7 +268,7 @@ class TmdbRepository {
       );
       return response.data;
     } on DioException catch (e) {
-      print("Error fetching media details: ${e.message}");
+      debugPrint("Error fetching media details: ${e.message}");
       // Re-throw the exception so the UI layer can handle it
       throw Exception('Failed to load media details');
     }
@@ -284,7 +285,7 @@ class TmdbRepository {
       );
       return response.data;
     } on DioException catch (e) {
-      print("Error fetching season details: ${e.message}");
+      debugPrint("Error fetching season details: ${e.message}");
       throw Exception('Failed to load season details');
     }
   }
@@ -301,7 +302,7 @@ class TmdbRepository {
       );
       return List<Map<String, dynamic>>.from(response.data['results']);
     } on DioException catch (e) {
-      print("Error fetching watch providers: ${e.message}");
+      debugPrint("Error fetching watch providers: ${e.message}");
       return [];
     }
   }
@@ -318,7 +319,9 @@ class TmdbRepository {
       );
       return List<Map<String, dynamic>>.from(response.data['results']);
     } on DioException catch (e) {
-      print("Error fetching similar content for $mediaType/$id: ${e.message}");
+      debugPrint(
+        "Error fetching similar content for $mediaType/$id: ${e.message}",
+      );
       return [];
     }
   }

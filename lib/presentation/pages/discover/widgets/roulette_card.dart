@@ -16,12 +16,12 @@ class RouletteCard extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.auroraPink.withOpacity(0.5)),
+        border: Border.all(color: AppColors.auroraPink.withValues(alpha: 0.5)),
         // A cool, subtle gradient
         gradient: LinearGradient(
           colors: [
-            AppColors.auroraPurple.withOpacity(0.1),
-            AppColors.darkSurface.withOpacity(0.5),
+            AppColors.auroraPurple.withValues(alpha: 0.1),
+            AppColors.darkSurface.withValues(alpha: 0.5),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -48,7 +48,7 @@ class RouletteCard extends StatelessWidget {
                 "Let us find a hidden gem for you to watch tonight.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                   fontSize: 16,
                 ),
               ),

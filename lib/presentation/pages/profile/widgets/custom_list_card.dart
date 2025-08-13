@@ -89,7 +89,7 @@ class CustomListCard extends ConsumerWidget {
             Positioned.fill(
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                child: Container(color: Colors.black.withOpacity(0.5)),
+                child: Container(color: Colors.black.withValues(alpha: 0.5)),
               ),
             ),
             Padding(
@@ -149,7 +149,7 @@ class CustomListCard extends ConsumerWidget {
     height: 180,
     margin: const EdgeInsets.only(bottom: 16),
     decoration: BoxDecoration(
-      color: AppColors.darkErrorRed.withOpacity(0.2),
+      color: AppColors.darkErrorRed.withValues(alpha: 0.2),
       borderRadius: BorderRadius.circular(16),
     ),
     child: const Center(child: Text("Could not load details")),

@@ -230,7 +230,7 @@ class _PerformanceShowcaseState extends ConsumerState<PerformanceShowcase>
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),

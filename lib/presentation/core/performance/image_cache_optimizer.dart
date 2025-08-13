@@ -209,7 +209,8 @@ class OptimizedNetworkImage extends StatelessWidget {
 
     canvas.drawRect(const Rect.fromLTWH(0, 0, 1, 1), paint);
 
-    final picture = recorder.endRecording();
+    // final picture = recorder.endRecording();
+    recorder.endRecording();
     return Uint8List(0); // Simplified for now
   }
 

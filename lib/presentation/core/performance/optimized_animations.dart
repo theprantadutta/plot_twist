@@ -395,6 +395,7 @@ class _OptimizedListAnimationState extends State<OptimizedListAnimation> {
 /// Visibility detector for lazy loading
 class VisibilityDetector extends StatefulWidget {
   @override
+  // ignore: overridden_fields
   final Key key;
   final Widget child;
   final Function(VisibilityInfo) onVisibilityChanged;
@@ -479,6 +480,7 @@ class OptimizedPageTransition<T> extends PageRouteBuilder<T> {
   final Widget child;
   final PageTransitionType transitionType;
   @override
+  // ignore: overridden_fields
   final Duration transitionDuration;
   final Curve curve;
 
@@ -552,8 +554,8 @@ enum PageTransitionType { fade, slideRight, slideLeft, slideUp, scale }
 
 /// Animation performance optimizer
 class AnimationPerformanceOptimizer {
-  static const double _targetFPS = 60.0;
-  static const Duration _frameTime = Duration(microseconds: 16667); // 60 FPS
+  // static const double _targetFPS = 60.0;
+  // static const Duration _frameTime = Duration(microseconds: 16667); // 60 FPS
 
   /// Optimize animation duration based on device performance
   static Duration optimizeDuration(Duration baseDuration) {

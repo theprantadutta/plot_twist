@@ -24,11 +24,11 @@ class ShimmerLoader extends StatelessWidget {
             borderRadius: shape == BoxShape.rectangle
                 ? BorderRadius.circular(16)
                 : null,
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
           ),
         )
         .animate(onComplete: (controller) => controller.repeat())
-        .shimmer(duration: 1200.ms, color: Colors.white.withOpacity(0.2));
+        .shimmer(duration: 1200.ms, color: Colors.white.withValues(alpha: 0.2));
   }
 }
 

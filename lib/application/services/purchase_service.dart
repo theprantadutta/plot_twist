@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'purchase_service.g.dart';
 

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/app_animations.dart';
 import '../../../core/app_colors.dart';
 import '../../../core/app_typography.dart';
-import '../../../core/app_animations.dart';
 import '../create_custom_list_screen.dart';
 
 /// Widget for managing list collaboration features

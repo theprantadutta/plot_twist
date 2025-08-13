@@ -128,6 +128,6 @@ class DetailScreenShimmer extends StatelessWidget {
           ),
         )
         .animate(onComplete: (c) => c.repeat())
-        .shimmer(duration: 1200.ms, color: Colors.white.withOpacity(0.1));
+        .shimmer(duration: 1200.ms, color: Colors.white.withValues(alpha: 0.1));
   }
 }

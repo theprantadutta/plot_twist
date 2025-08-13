@@ -47,7 +47,7 @@ class SelectableWatchlistItemTile extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.auroraPink.withOpacity(0.2)
+              ? AppColors.auroraPink.withValues(alpha: 0.2)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),

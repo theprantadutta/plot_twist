@@ -25,7 +25,7 @@
 //         child: Container(
 //           padding: const EdgeInsets.symmetric(vertical: 16),
 //           decoration: BoxDecoration(
-//             color: AppColors.darkSurface.withOpacity(0.95),
+//             color: AppColors.darkSurface.withValues(alpha: 0.95),
 //             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
 //           ),
 //           child: Column(
@@ -131,7 +131,7 @@ class _ActionSheetContent extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface.withOpacity(0.95),
+          color: AppColors.darkSurface.withValues(alpha: 0.95),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(

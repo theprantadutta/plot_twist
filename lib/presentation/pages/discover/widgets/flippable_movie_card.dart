@@ -90,7 +90,7 @@ class _FlippableMovieCardState extends State<FlippableMovieCard>
         color: AppColors.darkSurface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 25,
             offset: const Offset(0, 10),
           ),
@@ -121,9 +121,9 @@ class _FlippableMovieCardState extends State<FlippableMovieCard>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.black.withOpacity(0.9),
+                Colors.black.withValues(alpha: 0.9),
                 Colors.transparent,
-                Colors.black.withOpacity(0.9),
+                Colors.black.withValues(alpha: 0.9),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

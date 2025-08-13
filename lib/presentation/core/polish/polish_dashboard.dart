@@ -145,7 +145,7 @@ class _PolishDashboardState extends State<PolishDashboard> {
                   height: 80,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: result.grade.color.withOpacity(0.1),
+                    color: result.grade.color.withValues(alpha: 0.1),
                     border: Border.all(
                       color: result.grade.color,
                       width: 3,
@@ -224,7 +224,7 @@ class _PolishDashboardState extends State<PolishDashboard> {
           height: 48,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
           ),
           child: Center(
             child: Text(

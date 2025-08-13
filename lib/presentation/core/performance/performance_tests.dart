@@ -9,7 +9,7 @@ import 'optimized_animations.dart';
 /// Performance tests for animation optimization
 class AnimationPerformanceTests {
   static const int _testDuration = 5000; // 5 seconds
-  static const int _targetFps = 60;
+  // static const int _targetFps = 60;
   static const double _acceptableFrameDropThreshold = 0.05; // 5%
 
   /// Test animation frame rate consistency
@@ -22,7 +22,7 @@ class AnimationPerformanceTests {
     final frameDrops = <double>[];
     final frameTimes = <double>[];
 
-    late Timer testTimer;
+    // late Timer testTimer;
     late Timer sampleTimer;
 
     // Start monitoring
@@ -39,7 +39,7 @@ class AnimationPerformanceTests {
     });
 
     // Stop test after duration
-    testTimer = Timer(Duration(milliseconds: _testDuration), () {
+    Timer(Duration(milliseconds: _testDuration), () {
       sampleTimer.cancel();
       monitor.stopMonitoring();
 
@@ -77,7 +77,7 @@ class AnimationPerformanceTests {
     final monitor = AnimationPerformanceMonitor();
     final memorySnapshots = <double>[];
 
-    late Timer testTimer;
+    // late Timer testTimer;
     late Timer sampleTimer;
 
     // Start monitoring
@@ -91,7 +91,7 @@ class AnimationPerformanceTests {
     });
 
     // Stop test after duration
-    testTimer = Timer(Duration(milliseconds: _testDuration), () {
+    Timer(Duration(milliseconds: _testDuration), () {
       sampleTimer.cancel();
       monitor.stopMonitoring();
 

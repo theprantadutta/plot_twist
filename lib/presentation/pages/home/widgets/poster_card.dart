@@ -54,7 +54,7 @@ class PosterCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: 0.3),
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),
@@ -92,7 +92,7 @@ class PosterCard extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: AppColors.darkSurface.withOpacity(0.8),
+        color: AppColors.darkSurface.withValues(alpha: 0.8),
         shape: BoxShape.circle,
       ),
       child: Stack(
@@ -100,7 +100,7 @@ class PosterCard extends StatelessWidget {
         children: [
           CircularProgressIndicator(
             value: voteAverage / 10.0,
-            backgroundColor: Colors.grey.withOpacity(0.5),
+            backgroundColor: Colors.grey.withValues(alpha: 0.5),
             color: _getRatingColor(voteAverage),
             strokeWidth: 3.0,
           ),

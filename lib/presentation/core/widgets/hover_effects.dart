@@ -214,7 +214,7 @@ class _HoverEffectState extends State<HoverEffect>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  bool _isHovered = false;
+  // bool _isHovered = false;
 
   @override
   void initState() {
@@ -234,12 +234,12 @@ class _HoverEffectState extends State<HoverEffect>
 
   void _onEnter() {
     if (!widget.enabled) return;
-    setState(() => _isHovered = true);
+    // setState(() => _isHovered = true);
     _controller.forward();
   }
 
   void _onExit() {
-    setState(() => _isHovered = false);
+    // setState(() => _isHovered = false);
     _controller.reverse();
   }
 

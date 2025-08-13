@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../app_animations.dart';
 import '../app_colors.dart';
 import '../app_typography.dart';
-import '../app_animations.dart';
 import 'movie_poster_card.dart';
 import 'progress_indicators.dart';
 
@@ -234,7 +234,7 @@ class EnhancedWatchedCard extends StatefulWidget {
   final CompletionStatus status;
   final double? userRating;
   final DateTime? watchedDate;
-  final int? rewatchCount;
+  final int? reWatchCount;
   final VoidCallback? onTap;
   final VoidCallback? onRate;
   final Duration animationDelay;
@@ -245,7 +245,7 @@ class EnhancedWatchedCard extends StatefulWidget {
     this.status = CompletionStatus.completed,
     this.userRating,
     this.watchedDate,
-    this.rewatchCount,
+    this.reWatchCount,
     this.onTap,
     this.onRate,
     this.animationDelay = Duration.zero,
@@ -338,8 +338,8 @@ class _EnhancedWatchedCardState extends State<EnhancedWatchedCard>
                     ),
                   ),
 
-                // Rewatch Count Badge
-                if (widget.rewatchCount != null && widget.rewatchCount! > 1)
+                // ReWatch Count Badge
+                if (widget.reWatchCount != null && widget.reWatchCount! > 1)
                   Positioned(
                     bottom: 8,
                     right: 8,
@@ -367,7 +367,7 @@ class _EnhancedWatchedCardState extends State<EnhancedWatchedCard>
                           ),
                           const SizedBox(width: 2),
                           Text(
-                            '${widget.rewatchCount}',
+                            '${widget.reWatchCount}',
                             style: AppTypography.labelSmall.copyWith(
                               color: Colors.white,
                               fontSize: 9,

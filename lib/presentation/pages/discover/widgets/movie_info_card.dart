@@ -37,7 +37,7 @@
 //         color: AppColors.darkSurface,
 //         boxShadow: [
 //           BoxShadow(
-//             color: Colors.black.withOpacity(0.5),
+//             color: Colors.black.withValues(alpha: 0.5),
 //             blurRadius: 25,
 //             offset: const Offset(0, 10),
 //           ),
@@ -58,7 +58,7 @@
 //                 gradient: LinearGradient(
 //                   colors: [
 //                     Colors.transparent,
-//                     AppColors.darkBackground.withOpacity(0.9),
+//                     AppColors.darkBackground.withValues(alpha: 0.9),
 //                   ],
 //                   begin: Alignment.topCenter,
 //                   end: Alignment.bottomCenter,
@@ -120,7 +120,7 @@
 //                             Text(
 //                               "Action, Comedy, Drama",
 //                               style: TextStyle(
-//                                 color: Colors.white.withOpacity(0.7),
+//                                 color: Colors.white.withValues(alpha: 0.7),
 //                               ),
 //                             ),
 //                           ],
@@ -156,7 +156,7 @@
 //                     overview,
 //                     maxLines: 3,
 //                     overflow: TextOverflow.ellipsis,
-//                     style: TextStyle(color: Colors.white.withOpacity(0.8)),
+//                     style: TextStyle(color: Colors.white.withValues(alpha: 0.8)),
 //                   ),
 //                 ],
 //               ),
@@ -250,7 +250,7 @@ class MovieInfoCard extends StatelessWidget {
           color: AppColors.darkSurface,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               blurRadius: 25,
               offset: const Offset(0, 10),
             ),
@@ -271,7 +271,7 @@ class MovieInfoCard extends StatelessWidget {
                   gradient: LinearGradient(
                     colors: [
                       Colors.transparent,
-                      AppColors.darkBackground.withOpacity(0.9),
+                      AppColors.darkBackground.withValues(alpha: 0.9),
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -318,7 +318,7 @@ class MovieInfoCard extends StatelessWidget {
                               Text(
                                 "Action, Comedy, Drama",
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withValues(alpha: 0.7),
                                 ),
                               ),
                             ],
@@ -354,7 +354,7 @@ class MovieInfoCard extends StatelessWidget {
                       overview,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.8)),
                     ),
                   ],
                 ),

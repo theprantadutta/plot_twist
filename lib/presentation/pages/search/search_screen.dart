@@ -56,7 +56,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           onChanged: (query) => _debouncer.value = query,
           decoration: InputDecoration(
             hintText: "Search Movies & TV Shows...",
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
             border: InputBorder.none,
           ),
           style: const TextStyle(color: Colors.white),

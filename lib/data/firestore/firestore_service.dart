@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -134,13 +135,13 @@ class FirestoreService {
         .collection('custom_lists')
         .doc(listId);
 
-    // IMPORTANT: You must delete all items in the subcollection first.
+    // IMPORTANT: You must delete all items in the sub-collection first.
     final itemsSnapshot = await listRef.collection('items').get();
     for (var doc in itemsSnapshot.docs) {
       await doc.reference.delete();
     }
 
-    // After the subcollection is empty, delete the main list document.
+    // After the sub-collection is empty, delete the main list document.
     await listRef.delete();
   }
 
@@ -175,7 +176,7 @@ class FirestoreService {
       final downloadUrl = await uploadTask.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
-      print("Failed to upload avatar: $e");
+      debugPrint("Failed to upload avatar: $e");
       return null;
     }
   }
