@@ -33,16 +33,14 @@ class _WatchedHistoryScreenState extends ConsumerState<WatchedHistoryScreen> {
   void initState() {
     super.initState();
     // Clear any selections from other screens and set the initial filter
-    Future.microtask(
-      () => ref.read(multiSelectNotifierProvider.notifier).clear(),
-    );
+    Future.microtask(() => ref.read(multiSelectProvider.notifier).clear());
   }
 
   void _toggleEditMode() {
     setState(() {
       _isEditMode = !_isEditMode;
       if (!_isEditMode) {
-        ref.read(multiSelectNotifierProvider.notifier).clear();
+        ref.read(multiSelectProvider.notifier).clear();
       }
     });
   }
@@ -50,7 +48,7 @@ class _WatchedHistoryScreenState extends ConsumerState<WatchedHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final watchedAsync = ref.watch(watchedDetailsProvider);
-    final selectedItems = ref.watch(multiSelectNotifierProvider);
+    final selectedItems = ref.watch(multiSelectProvider);
 
     return WillPopScope(
       onWillPop: () async {
@@ -139,9 +137,7 @@ class _WatchedHistoryScreenState extends ConsumerState<WatchedHistoryScreen> {
                           for (var mediaId in selectedItems) {
                             service.removeFromList('watched', mediaId);
                           }
-                          ref
-                              .read(multiSelectNotifierProvider.notifier)
-                              .clear();
+                          ref.read(multiSelectProvider.notifier).clear();
                         },
                       ),
                     ],

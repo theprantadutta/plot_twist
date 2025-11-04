@@ -24,7 +24,7 @@ class PersonCard extends StatelessWidget {
             backgroundImage: NetworkImage(
               'https://image.tmdb.org/t/p/w500$profilePath',
             ),
-            backgroundColor: Colors.white.withOpacity(0.1),
+            backgroundColor: Colors.white.withValues(alpha: 0.1),
           ),
           const SizedBox(height: 12),
           Text(
@@ -40,7 +40,7 @@ class PersonCard extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

@@ -13,10 +13,7 @@ typedef CustomListDetails = ({int itemCount, List<String> posterPaths});
 // --- THIS IS THE NEW PROVIDER ---
 // Given a listId, it fetches the item count and first 4 posters.
 @Riverpod(keepAlive: true)
-Future<CustomListDetails> customListDetails(
-  CustomListDetailsRef ref,
-  String listId,
-) async {
+Future<CustomListDetails> customListDetails(Ref ref, String listId) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) {
     throw Exception("User not logged in");
@@ -64,30 +61,28 @@ Stream<int> _listCountStream(String listName, String? mediaType) {
 // --- NEW, MORE DETAILED STAT PROVIDERS ---
 
 @Riverpod(keepAlive: true)
-Stream<int> watchedMoviesCount(WatchedMoviesCountRef ref) {
+Stream<int> watchedMoviesCount(Ref ref) {
   return _listCountStream('watched', 'movie');
 }
 
 @Riverpod(keepAlive: true)
-Stream<int> watchedTvShowsCount(WatchedTvShowsCountRef ref) {
+Stream<int> watchedTvShowsCount(Ref ref) {
   return _listCountStream('watched', 'tv');
 }
 
 @Riverpod(keepAlive: true)
-Stream<int> watchlistMoviesCount(WatchlistMoviesCountRef ref) {
+Stream<int> watchlistMoviesCount(Ref ref) {
   return _listCountStream('watchlist', 'movie');
 }
 
 @Riverpod(keepAlive: true)
-Stream<int> watchlistTvShowsCount(WatchlistTvShowsCountRef ref) {
+Stream<int> watchlistTvShowsCount(Ref ref) {
   return _listCountStream('watchlist', 'tv');
 }
 
 // Provider for the user's custom lists
 @Riverpod(keepAlive: true)
-Stream<List<QueryDocumentSnapshot>> customListsStream(
-  CustomListsStreamRef ref,
-) {
+Stream<List<QueryDocumentSnapshot>> customListsStream(Ref ref) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return Stream.value([]);
 
@@ -101,9 +96,7 @@ Stream<List<QueryDocumentSnapshot>> customListsStream(
 
 // --- Keep the existing provider for user details ---
 @Riverpod(keepAlive: true)
-Stream<DocumentSnapshot<Map<String, dynamic>>> userDocumentStream(
-  UserDocumentStreamRef ref,
-) {
+Stream<DocumentSnapshot<Map<String, dynamic>>> userDocumentStream(Ref ref) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return Stream.empty();
   return FirebaseFirestore.instance.collection('users').doc(userId).snapshots();
@@ -111,7 +104,7 @@ Stream<DocumentSnapshot<Map<String, dynamic>>> userDocumentStream(
 
 // This provider calculates the total watch time for all watched MOVIES
 @Riverpod(keepAlive: true)
-int movieWatchTime(MovieWatchTimeRef ref) {
+int movieWatchTime(Ref ref) {
   // 1. Watch the provider that already fetches all our watched items
   final watchedDetails = ref.watch(watchedDetailsProvider);
   int totalMinutes = 0;
@@ -131,7 +124,7 @@ int movieWatchTime(MovieWatchTimeRef ref) {
 
 // This provider calculates the total watch time for all watched TV SHOWS
 @Riverpod(keepAlive: true)
-int tvShowWatchTime(TvShowWatchTimeRef ref) {
+int tvShowWatchTime(Ref ref) {
   final watchedDetails = ref.watch(watchedDetailsProvider);
   int totalMinutes = 0;
 
@@ -153,7 +146,7 @@ int tvShowWatchTime(TvShowWatchTimeRef ref) {
 
 // This provider calculates the TOTAL number of watched items by combining movies and shows.
 @Riverpod(keepAlive: true)
-int totalWatchedCount(TotalWatchedCountRef ref) {
+int totalWatchedCount(Ref ref) {
   final movies = ref.watch(watchedMoviesCountProvider).asData?.value ?? 0;
   final shows = ref.watch(watchedTvShowsCountProvider).asData?.value ?? 0;
   return movies + shows;
@@ -161,7 +154,7 @@ int totalWatchedCount(TotalWatchedCountRef ref) {
 
 // This provider calculates the TOTAL watch time in hours.
 @Riverpod(keepAlive: true)
-int totalWatchTime(TotalWatchTimeRef ref) {
+int totalWatchTime(Ref ref) {
   final movieMinutes = ref.watch(
     movieWatchTimeProvider,
   ); // Already returns hours

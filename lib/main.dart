@@ -42,7 +42,7 @@ class PlotTwistsApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Theme definitions remain here as they are an app-level concern.
-    final appearanceState = ref.watch(appearanceNotifierProvider);
+    final appearanceState = ref.watch(appearanceProvider);
     final darkTheme = ThemeData(
       brightness: Brightness.dark,
       scaffoldBackgroundColor: appearanceState.useTrueBlack

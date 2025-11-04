@@ -11,14 +11,14 @@ class MediaTypeToggle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentType = ref.watch(mediaTypeNotifierProvider);
-    final notifier = ref.read(mediaTypeNotifierProvider.notifier);
+    final currentType = ref.watch(mediaTypeProvider);
+    final notifier = ref.read(mediaTypeProvider.notifier);
 
     return Container(
       width: 130,
       height: 40,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: Colors.black.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Stack(

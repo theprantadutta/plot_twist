@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/local/persistence_service.dart';
@@ -18,7 +17,7 @@ class DiscoverDeck extends _$DiscoverDeck {
     _page = 1;
     final repo = ref.read(tmdbRepositoryProvider);
     // Get the currently selected media type from the toggle
-    final mediaType = ref.watch(mediaTypeNotifierProvider);
+    final mediaType = ref.watch(mediaTypeProvider);
     // Fetch the correct type of deck
     return repo.getDiscoverDeck(type: mediaType, page: _page);
   }
@@ -53,7 +52,7 @@ class DiscoverDeck extends _$DiscoverDeck {
     _page++;
     final repo = ref.read(tmdbRepositoryProvider);
     // Also use the mediaType when fetching more pages
-    final mediaType = ref.read(mediaTypeNotifierProvider);
+    final mediaType = ref.read(mediaTypeProvider);
     final newItems = await repo.getDiscoverDeck(type: mediaType, page: _page);
 
     final currentItems = state.value ?? [];
@@ -70,7 +69,7 @@ TmdbRepository tmdbRepository(Ref ref) {
 // This one automatically reacts to the movie/tv toggle
 @Riverpod(keepAlive: true)
 Future<List<Map<String, dynamic>>> discoverGenres(Ref ref) {
-  final mediaType = ref.watch(mediaTypeNotifierProvider);
+  final mediaType = ref.watch(mediaTypeProvider);
   final repository = ref.watch(tmdbRepositoryProvider);
   return repository.getGenres(mediaType);
 }

@@ -10,8 +10,8 @@ class AppearanceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appearance = ref.watch(appearanceNotifierProvider);
-    final notifier = ref.read(appearanceNotifierProvider.notifier);
+    final appearance = ref.watch(appearanceProvider);
+    final notifier = ref.read(appearanceProvider.notifier);
 
     // Our curated list of accent colors
     final List<Color> accentColors = [
@@ -93,7 +93,7 @@ class AppearanceScreen extends ConsumerWidget {
                   ),
                   value: appearance.useTrueBlack,
                   onChanged: notifier.setTrueBlack,
-                  activeColor:
+                  activeThumbColor:
                       appearance.accentColor, // Use the selected accent color
                 ),
               ],

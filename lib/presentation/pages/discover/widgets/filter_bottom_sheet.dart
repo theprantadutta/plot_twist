@@ -22,17 +22,17 @@ class FilterBottomSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mediaType = ref.watch(mediaTypeNotifierProvider);
+    final mediaType = ref.watch(mediaTypeProvider);
     final genresAsyncValue = ref.watch(genreListProvider(mediaType));
-    final selectedGenres = ref.watch(discoverFiltersNotifierProvider);
-    final notifier = ref.read(discoverFiltersNotifierProvider.notifier);
+    final selectedGenres = ref.watch(discoverFiltersProvider);
+    final notifier = ref.read(discoverFiltersProvider.notifier);
 
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.7,
         decoration: BoxDecoration(
-          color: AppColors.darkSurface.withOpacity(0.9),
+          color: AppColors.darkSurface.withValues(alpha: 0.9),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -74,7 +74,7 @@ class FilterBottomSheet extends ConsumerWidget {
                               ? AppColors.auroraGradient
                               : null,
                           border: Border.all(
-                            color: AppColors.auroraPink.withOpacity(0.5),
+                            color: AppColors.auroraPink.withValues(alpha: 0.5),
                           ),
                           color: isSelected ? null : Colors.transparent,
                         ),

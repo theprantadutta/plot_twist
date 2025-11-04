@@ -11,8 +11,8 @@ class WatchProvidersScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final providersAsync = ref.watch(watchProvidersProvider);
     final selectedProviders =
-        ref.watch(preferencesNotifierProvider).value?.watchProviders ?? [];
-    final notifier = ref.read(preferencesNotifierProvider.notifier);
+        ref.watch(preferencesProvider).value?.watchProviders ?? [];
+    final notifier = ref.read(preferencesProvider.notifier);
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,

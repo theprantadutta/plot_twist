@@ -143,7 +143,7 @@ class _FullWatchlistScreenState extends ConsumerState<FullWatchlistScreen> {
       _isEditMode = !_isEditMode;
       // When leaving edit mode, clear any selections
       if (!_isEditMode) {
-        ref.read(multiSelectNotifierProvider.notifier).clear();
+        ref.read(multiSelectProvider.notifier).clear();
       }
     });
   }
@@ -160,9 +160,9 @@ class _FullWatchlistScreenState extends ConsumerState<FullWatchlistScreen> {
   @override
   Widget build(BuildContext context) {
     final watchlistAsync = ref.watch(watchlistDetailsProvider);
-    final currentFilter = ref.watch(watchlistFilterNotifierProvider);
-    final filterNotifier = ref.read(watchlistFilterNotifierProvider.notifier);
-    final selectedItems = ref.watch(multiSelectNotifierProvider);
+    final currentFilter = ref.watch(watchlistFilterProvider);
+    final filterNotifier = ref.read(watchlistFilterProvider.notifier);
+    final selectedItems = ref.watch(multiSelectProvider);
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
@@ -317,10 +317,7 @@ class _FullWatchlistScreenState extends ConsumerState<FullWatchlistScreen> {
                                       }
                                       // Clear the selection after the action is done
                                       ref
-                                          .read(
-                                            multiSelectNotifierProvider
-                                                .notifier,
-                                          )
+                                          .read(multiSelectProvider.notifier)
                                           .clear();
                                     },
                                   ),

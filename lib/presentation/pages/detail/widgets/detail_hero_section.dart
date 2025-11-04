@@ -39,7 +39,7 @@ class DetailHeroSection extends StatelessWidget {
                   gradient: LinearGradient(
                     colors: [
                       Colors.transparent,
-                      AppColors.darkBackground.withOpacity(0.5),
+                      AppColors.darkBackground.withValues(alpha: 0.5),
                       AppColors.darkBackground,
                     ],
                     begin: Alignment.topCenter,
@@ -65,7 +65,7 @@ class DetailHeroSection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                         blurRadius: 20,
                         spreadRadius: 5,
                       ),
@@ -129,7 +129,7 @@ class DetailHeroSection extends StatelessWidget {
             top: 40,
             left: 16,
             child: CircleAvatar(
-              backgroundColor: Colors.black.withOpacity(0.5),
+              backgroundColor: Colors.black.withValues(alpha: 0.5),
               child: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () => Navigator.of(context).pop(),

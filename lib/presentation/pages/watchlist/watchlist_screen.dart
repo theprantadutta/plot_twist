@@ -18,7 +18,7 @@ class WatchlistScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // We now watch the GLOBAL mediaTypeNotifierProvider
-    final selectedType = ref.watch(mediaTypeNotifierProvider);
+    final selectedType = ref.watch(mediaTypeProvider);
     final watchlistAsync = ref.watch(watchlistDetailsProvider);
 
     return Scaffold(

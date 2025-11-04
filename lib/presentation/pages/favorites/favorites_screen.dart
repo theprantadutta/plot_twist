@@ -27,16 +27,14 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   void initState() {
     super.initState();
     // Clear any selections from other screens when this screen is first built
-    Future.microtask(
-      () => ref.read(multiSelectNotifierProvider.notifier).clear(),
-    );
+    Future.microtask(() => ref.read(multiSelectProvider.notifier).clear());
   }
 
   void _toggleEditMode() {
     setState(() {
       _isEditMode = !_isEditMode;
       if (!_isEditMode) {
-        ref.read(multiSelectNotifierProvider.notifier).clear();
+        ref.read(multiSelectProvider.notifier).clear();
       }
     });
   }
@@ -44,9 +42,9 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     final favoritesAsync = ref.watch(favoritesDetailsProvider);
-    final currentFilter = ref.watch(favoritesFilterNotifierProvider);
-    final filterNotifier = ref.read(favoritesFilterNotifierProvider.notifier);
-    final selectedItems = ref.watch(multiSelectNotifierProvider);
+    final currentFilter = ref.watch(favoritesFilterProvider);
+    final filterNotifier = ref.read(favoritesFilterProvider.notifier);
+    final selectedItems = ref.watch(multiSelectProvider);
 
     return WillPopScope(
       onWillPop: () async {
@@ -120,8 +118,9 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                       final filteredList = fullList.where((item) {
                         if (currentFilter == FavoritesFilter.all) return true;
                         final isMovie = item.containsKey('title');
-                        if (currentFilter == FavoritesFilter.movies)
+                        if (currentFilter == FavoritesFilter.movies) {
                           return isMovie;
+                        }
                         return !isMovie;
                       }).toList();
 
@@ -187,9 +186,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                                       );
                                     }
                                     ref
-                                        .read(
-                                          multiSelectNotifierProvider.notifier,
-                                        )
+                                        .read(multiSelectProvider.notifier)
                                         .clear();
                                   },
                                 ),

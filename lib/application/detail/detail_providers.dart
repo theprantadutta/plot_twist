@@ -1,7 +1,6 @@
 // lib/application/detail/detail_providers.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/local/persistence_service.dart';
@@ -46,7 +45,7 @@ Stream<bool> isMediaInWatchlist(Ref ref, int mediaId) {
 
 // It returns a double? (nullable) - null means not rated.
 @Riverpod(keepAlive: true)
-Stream<double?> mediaUserRating(MediaUserRatingRef ref, int mediaId) {
+Stream<double?> mediaUserRating(Ref ref, int mediaId) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return Stream.value(null);
 
@@ -66,7 +65,7 @@ Stream<double?> mediaUserRating(MediaUserRatingRef ref, int mediaId) {
 
 // This provider just checks if the movie exists in the 'watched' collection.
 @Riverpod(keepAlive: true)
-Stream<bool> isMediaWatched(IsMediaWatchedRef ref, int mediaId) {
+Stream<bool> isMediaWatched(Ref ref, int mediaId) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return Stream.value(false);
 
@@ -81,7 +80,7 @@ Stream<bool> isMediaWatched(IsMediaWatchedRef ref, int mediaId) {
 // It checks if a specific media item exists within a specific custom list.
 @Riverpod(keepAlive: true)
 Stream<bool> isMediaInCustomList(
-  IsMediaInCustomListRef ref, {
+  Ref ref, {
   required String listId,
   required int mediaId,
 }) {
@@ -100,10 +99,7 @@ Stream<bool> isMediaInCustomList(
 }
 
 @Riverpod(keepAlive: true)
-Future<Map<String, dynamic>> seasonDetails(
-  SeasonDetailsRef ref,
-  SeasonIdentifier season,
-) {
+Future<Map<String, dynamic>> seasonDetails(Ref ref, SeasonIdentifier season) {
   final repo = ref.watch(tmdbRepositoryProvider);
   return repo.getSeasonDetails(
     tvId: season.tvId,
@@ -112,7 +108,7 @@ Future<Map<String, dynamic>> seasonDetails(
 }
 
 @Riverpod(keepAlive: true)
-Stream<bool> isMediaInFavorites(IsMediaInFavoritesRef ref, int mediaId) {
+Stream<bool> isMediaInFavorites(Ref ref, int mediaId) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return Stream.value(false);
 

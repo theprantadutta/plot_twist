@@ -31,7 +31,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       initialValue: '',
       onChanged: (query) {
         if (mounted) {
-          ref.read(searchQueryNotifierProvider.notifier).setQuery(query);
+          ref.read(searchQueryProvider.notifier).setQuery(query);
         }
       },
     );
@@ -56,7 +56,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           onChanged: (query) => _debouncer.value = query,
           decoration: InputDecoration(
             hintText: "Search Movies & TV Shows...",
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
             border: InputBorder.none,
           ),
           style: const TextStyle(color: Colors.white),
@@ -115,7 +115,7 @@ class _SearchResultsGridState extends ConsumerState<SearchResultsGrid> {
   }
 
   Future<void> _fetchData({bool isLoadMore = false}) async {
-    final query = ref.read(searchQueryNotifierProvider);
+    final query = ref.read(searchQueryProvider);
     if (query.isEmpty) {
       if (mounted) setState(() => _items = []);
       return;
@@ -125,7 +125,7 @@ class _SearchResultsGridState extends ConsumerState<SearchResultsGrid> {
     if (mounted) setState(() => _isLoading = true);
 
     final repo = ref.read(tmdbRepositoryProvider);
-    final mediaType = ref.read(mediaTypeNotifierProvider);
+    final mediaType = ref.read(mediaTypeProvider);
     final newItems = await repo.searchMedia(
       type: mediaType,
       query: query,
@@ -155,10 +155,10 @@ class _SearchResultsGridState extends ConsumerState<SearchResultsGrid> {
   @override
   Widget build(BuildContext context) {
     // The listeners are now correctly placed inside the build method.
-    ref.listen(searchQueryNotifierProvider, (_, __) => _resetAndFetch());
-    ref.listen(mediaTypeNotifierProvider, (_, __) => _resetAndFetch());
+    ref.listen(searchQueryProvider, (_, __) => _resetAndFetch());
+    ref.listen(mediaTypeProvider, (_, __) => _resetAndFetch());
 
-    final query = ref.watch(searchQueryNotifierProvider);
+    final query = ref.watch(searchQueryProvider);
 
     if (query.isEmpty) {
       return const Center(

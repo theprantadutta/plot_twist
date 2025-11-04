@@ -250,7 +250,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     // Watch our new provider. The UI will rebuild whenever this changes.
-    final selectedType = ref.watch(mediaTypeNotifierProvider);
+    final selectedType = ref.watch(mediaTypeProvider);
 
     // We can keep a single repository instance
     final tmdbRepository = TmdbRepository();
@@ -272,7 +272,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             icon: const Icon(Icons.search_rounded),
             onPressed: () {
               // Reset search query when opening the page
-              ref.read(searchQueryNotifierProvider.notifier).setQuery('');
+              ref.read(searchQueryProvider.notifier).setQuery('');
               Navigator.of(
                 context,
               ).push(MaterialPageRoute(builder: (_) => const SearchScreen()));

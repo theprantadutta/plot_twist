@@ -12,8 +12,8 @@ class NotificationsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settingsAsync = ref.watch(notificationSettingsNotifierProvider);
-    final notifier = ref.read(notificationSettingsNotifierProvider.notifier);
+    final settingsAsync = ref.watch(notificationSettingsProvider);
+    final notifier = ref.read(notificationSettingsProvider.notifier);
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
@@ -41,7 +41,7 @@ class NotificationsScreen extends ConsumerWidget {
                       ),
                       value: allEnabled,
                       onChanged: notifier.setAllNotifications,
-                      activeColor: AppColors.auroraPink,
+                      activeThumbColor: AppColors.auroraPink,
                     ),
                   ],
                 ),
@@ -64,7 +64,7 @@ class NotificationsScreen extends ConsumerWidget {
                               ),
                               value: settings.moviePremiereReminders,
                               onChanged: notifier.setMoviePremiereReminders,
-                              activeColor: AppColors.auroraPink,
+                              activeThumbColor: AppColors.auroraPink,
                             ),
                             const Divider(
                               height: 1,
@@ -97,7 +97,7 @@ class NotificationsScreen extends ConsumerWidget {
                               ),
                               value: settings.newEpisodeReminders,
                               onChanged: notifier.setNewEpisodeReminders,
-                              activeColor: AppColors.auroraPink,
+                              activeThumbColor: AppColors.auroraPink,
                             ),
                           ],
                         ),
@@ -113,7 +113,7 @@ class NotificationsScreen extends ConsumerWidget {
                               ),
                               value: settings.trendingReminders,
                               onChanged: notifier.setTrendingReminders,
-                              activeColor: AppColors.auroraPink,
+                              activeThumbColor: AppColors.auroraPink,
                             ),
                             const Divider(
                               height: 1,
@@ -126,7 +126,7 @@ class NotificationsScreen extends ConsumerWidget {
                               ),
                               value: settings.suggestionReminders,
                               onChanged: notifier.setSuggestionReminders,
-                              activeColor: AppColors.auroraPink,
+                              activeThumbColor: AppColors.auroraPink,
                             ),
                           ],
                         ),
@@ -142,7 +142,7 @@ class NotificationsScreen extends ConsumerWidget {
                               ),
                               value: settings.dailyMovieMarathon,
                               onChanged: notifier.setDailyMovieMarathon,
-                              activeColor: AppColors.auroraPink,
+                              activeThumbColor: AppColors.auroraPink,
                             ),
                             const Divider(
                               height: 1,
@@ -155,7 +155,7 @@ class NotificationsScreen extends ConsumerWidget {
                               ),
                               value: settings.dailyTvPick,
                               onChanged: notifier.setDailyTvPick,
-                              activeColor: AppColors.auroraPink,
+                              activeThumbColor: AppColors.auroraPink,
                             ),
                           ],
                         ),

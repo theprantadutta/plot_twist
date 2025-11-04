@@ -16,13 +16,13 @@ const Set<String> _productIds = {
 
 // This provider will expose the purchase service to the UI
 @Riverpod(keepAlive: true)
-PurchaseService purchaseService(PurchaseServiceRef ref) {
+PurchaseService purchaseService(Ref ref) {
   return PurchaseService();
 }
 
 // This provider will expose the list of available products
 @Riverpod(keepAlive: true)
-Stream<List<ProductDetails>> products(ProductsRef ref) {
+Stream<List<ProductDetails>> products(Ref ref) {
   return ref.watch(purchaseServiceProvider).products;
 }
 

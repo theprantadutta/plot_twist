@@ -61,9 +61,9 @@ class _DiscoverGridState extends ConsumerState<DiscoverGrid> {
     });
 
     final repo = ref.read(tmdbRepositoryProvider);
-    final mediaType = ref.read(mediaTypeNotifierProvider);
-    final query = ref.read(searchQueryNotifierProvider);
-    final genres = ref.read(discoverFiltersNotifierProvider);
+    final mediaType = ref.read(mediaTypeProvider);
+    final query = ref.read(searchQueryProvider);
+    final genres = ref.read(discoverFiltersProvider);
 
     List<Map<String, dynamic>> newItems;
     if (query.isNotEmpty) {
@@ -105,8 +105,8 @@ class _DiscoverGridState extends ConsumerState<DiscoverGrid> {
   Widget build(BuildContext context) {
     // --- THIS IS THE FIX ---
     // We listen here, inside the build method. This is the correct place.
-    ref.listen(discoverFiltersNotifierProvider, (_, __) => _resetAndFetch());
-    ref.listen(searchQueryNotifierProvider, (_, __) => _resetAndFetch());
+    ref.listen(discoverFiltersProvider, (_, __) => _resetAndFetch());
+    ref.listen(searchQueryProvider, (_, __) => _resetAndFetch());
     // ----------------------
 
     if (_items.isEmpty && _isLoading) {

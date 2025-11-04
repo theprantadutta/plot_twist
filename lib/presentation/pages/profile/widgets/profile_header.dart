@@ -54,7 +54,7 @@ class ProfileHeader extends ConsumerWidget {
                 '@$username',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                 ),
               ),
             ],

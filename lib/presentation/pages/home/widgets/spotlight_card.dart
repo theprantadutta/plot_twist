@@ -39,7 +39,7 @@ class SpotlightCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -67,7 +67,10 @@ class SpotlightCard extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
-                      colors: [Colors.black, Colors.black.withOpacity(0.0)],
+                      colors: [
+                        Colors.black,
+                        Colors.black.withValues(alpha: 0.0),
+                      ],
                     ),
                   ),
                   child: Row(
@@ -95,7 +98,7 @@ class SpotlightCard extends StatelessWidget {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
+                              color: Colors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Text(

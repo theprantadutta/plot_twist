@@ -54,8 +54,8 @@ class ProfileBanner extends ConsumerWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.black.withOpacity(0.2),
-                        Colors.black.withOpacity(0.8),
+                        Colors.black.withValues(alpha: 0.2),
+                        Colors.black.withValues(alpha: 0.8),
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -101,7 +101,7 @@ class ProfileBanner extends ConsumerWidget {
                           '@$username',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                           ),
                         ),
                       ],

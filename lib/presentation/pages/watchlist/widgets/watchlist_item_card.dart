@@ -25,7 +25,10 @@ class WatchlistItemCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 8),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 8,
+              ),
             ],
           ),
           child: ClipRRect(
@@ -43,7 +46,7 @@ class WatchlistItemCard extends StatelessWidget {
               duration: 300.ms,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: Colors.black.withOpacity(isEditMode ? 0.6 : 0),
+                color: Colors.black.withValues(alpha: isEditMode ? 0.6 : 0),
               ),
               child: Center(
                 child: IconButton(

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../discover/discover_providers.dart';
@@ -41,7 +40,7 @@ Stream<List<QueryDocumentSnapshot>> watchlistStream(Ref ref) {
 // It provides the final, filtered list to the UI.
 @Riverpod(keepAlive: true)
 List<QueryDocumentSnapshot> filteredWatchlist(Ref ref) {
-  final filter = ref.watch(watchlistFilterNotifierProvider);
+  final filter = ref.watch(watchlistFilterProvider);
   final watchlist = ref.watch(watchlistStreamProvider).asData?.value ?? [];
 
   if (filter == WatchlistFilter.all) {

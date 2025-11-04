@@ -112,7 +112,7 @@
 //                         duration: 300.ms,
 //                         decoration: BoxDecoration(
 //                           borderRadius: BorderRadius.circular(12),
-//                           color: Colors.black.withOpacity(0.6),
+//                           color: Colors.black.withValues(alpha: 0.6),
 //                         ),
 //                         child: Center(
 //                           child: IconButton(
@@ -170,7 +170,7 @@ class _CustomListDetailScreenState
     setState(() {
       _isEditMode = !_isEditMode;
       if (!_isEditMode) {
-        ref.read(multiSelectNotifierProvider.notifier).clear();
+        ref.read(multiSelectProvider.notifier).clear();
       }
     });
   }
@@ -206,7 +206,7 @@ class _CustomListDetailScreenState
         (listDetailsAsync.asData?.value.data()
             as Map<String, dynamic>?)?['name'] ??
         'List';
-    final selectedItems = ref.watch(multiSelectNotifierProvider);
+    final selectedItems = ref.watch(multiSelectProvider);
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
@@ -305,9 +305,7 @@ class _CustomListDetailScreenState
                                     );
                                   }
                                   ref
-                                      .read(
-                                        multiSelectNotifierProvider.notifier,
-                                      )
+                                      .read(multiSelectProvider.notifier)
                                       .clear();
                                 },
                               ),

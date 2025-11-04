@@ -23,8 +23,8 @@ class SelectableWatchlistItemTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaId = item['id'].toString();
-    final selectedItems = ref.watch(multiSelectNotifierProvider);
-    final notifier = ref.read(multiSelectNotifierProvider.notifier);
+    final selectedItems = ref.watch(multiSelectProvider);
+    final notifier = ref.read(multiSelectProvider.notifier);
     final isSelected = selectedItems.contains(mediaId);
 
     return InkWell(
@@ -47,7 +47,7 @@ class SelectableWatchlistItemTile extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.auroraPink.withOpacity(0.2)
+              ? AppColors.auroraPink.withValues(alpha: 0.2)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),

@@ -59,9 +59,7 @@ class FavoritesFilterNotifier extends _$FavoritesFilterNotifier {
 
 // This existing provider fetches the details for every item in the 'favorites' collection.
 @Riverpod(keepAlive: true)
-Future<List<Map<String, dynamic>>> favoritesDetails(
-  FavoritesDetailsRef ref,
-) async {
+Future<List<Map<String, dynamic>>> favoritesDetails(Ref ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 

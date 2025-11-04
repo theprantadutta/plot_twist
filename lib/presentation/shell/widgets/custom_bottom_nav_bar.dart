@@ -31,9 +31,9 @@ class CustomBottomNavBar extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
               color: (isDark ? AppColors.darkSurface : AppColors.lightSurface)
-                  .withOpacity(0.5),
+                  .withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: Colors.white.withOpacity(0.15)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
             ),
             // The row containing the navigation items
             child: Row(
@@ -77,8 +77,8 @@ class CustomBottomNavBar extends StatelessWidget {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      AppColors.auroraPink.withOpacity(0.4),
-                      AppColors.auroraPurple.withOpacity(0.0),
+                      AppColors.auroraPink.withValues(alpha: 0.4),
+                      AppColors.auroraPurple.withValues(alpha: 0.0),
                     ],
                     // Concentrate the gradient in the center
                     stops: const [0.25, 1.0],
@@ -111,7 +111,9 @@ class CustomBottomNavBar extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11,
                     // Use bright white for selected, and a dimmer white for unselected
-                    color: Colors.white.withOpacity(isSelected ? 1.0 : 0.7),
+                    color: Colors.white.withValues(
+                      alpha: isSelected ? 1.0 : 0.7,
+                    ),
                     fontWeight: isSelected
                         ? FontWeight.bold
                         : FontWeight.normal,

@@ -8,10 +8,7 @@ part 'custom_list_providers.g.dart';
 
 // Provider to get the details of the list itself (name, description, etc.)
 @Riverpod(keepAlive: true)
-Stream<DocumentSnapshot> customListStream(
-  CustomListStreamRef ref,
-  String listId,
-) {
+Stream<DocumentSnapshot> customListStream(Ref ref, String listId) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return Stream.empty();
 
@@ -28,7 +25,7 @@ Stream<DocumentSnapshot> customListStream(
 // full, rich details for each item from the TMDB API.
 @Riverpod(keepAlive: true)
 Future<List<Map<String, dynamic>>> customListItemsDetails(
-  CustomListItemsDetailsRef ref,
+  Ref ref,
   String listId,
 ) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;

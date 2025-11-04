@@ -8,10 +8,11 @@ part 'preferences_provider.g.dart';
 
 // --- A NEW PROVIDER TO FETCH STREAMING SERVICES ---
 @Riverpod(keepAlive: true)
-Future<List<Map<String, dynamic>>> watchProviders(WatchProvidersRef ref) {
-  final region = ref.watch(
-    preferencesNotifierProvider.select((p) => p.value?.contentRegion ?? 'US'),
-  );
+Future<List<Map<String, dynamic>>> watchProviders(Ref ref) {
+  // final region = ref.watch(
+  //   preferencesNotifierProvider.select((p) => p.value?.contentRegion ?? 'US'),
+  // );
+  final region = ref.watch(preferencesProvider).value?.contentRegion ?? 'US';
   return ref
       .watch(tmdbRepositoryProvider)
       .getWatchProviders(watchRegion: region);

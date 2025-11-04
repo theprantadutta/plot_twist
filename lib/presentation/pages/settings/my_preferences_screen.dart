@@ -130,7 +130,7 @@ class MyPreferencesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // We still watch the provider to ensure the screen can be updated later
     // without changing the core structure.
-    final preferencesAsync = ref.watch(preferencesNotifierProvider);
+    final preferencesAsync = ref.watch(preferencesProvider);
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,

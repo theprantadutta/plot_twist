@@ -18,8 +18,8 @@ class FavoriteGenresScreen extends ConsumerWidget {
     // Watch the preferences provider to get the list of selected genre IDs
     // We use .value to safely access the data from the stream provider
     final selectedGenres =
-        ref.watch(preferencesNotifierProvider).value?.favoriteGenres ?? [];
-    final notifier = ref.read(preferencesNotifierProvider.notifier);
+        ref.watch(preferencesProvider).value?.favoriteGenres ?? [];
+    final notifier = ref.read(preferencesProvider.notifier);
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,

@@ -5,6 +5,6 @@ part 'app_info_provider.g.dart';
 
 // This provider fetches the app's package info (like version and build number)
 @Riverpod(keepAlive: true)
-Future<PackageInfo> packageInfo(PackageInfoRef ref) {
+Future<PackageInfo> packageInfo(Ref ref) {
   return PackageInfo.fromPlatform();
 }
