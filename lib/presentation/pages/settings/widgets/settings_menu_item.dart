@@ -1,10 +1,11 @@
 // lib/presentation/pages/settings/widgets/settings_menu_item.dart
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/app_colors.dart';
 
 class SettingsMenuItem extends StatelessWidget {
-  final IconData icon;
+  final FaIconData icon;
   final Color iconColor;
   final String title;
   final String? subtitle;
@@ -34,7 +35,7 @@ class SettingsMenuItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             color: iconColor.withValues(alpha: 0.1),
           ),
-          child: Icon(icon, color: iconColor, size: 20),
+          child: FaIcon(icon, color: iconColor, size: 20),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: subtitle != null

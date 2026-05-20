@@ -43,9 +43,12 @@ class ActionButtonBar extends ConsumerWidget {
           // Add to Watchlist Button
           _buildActionButton(
             context: context,
-            icon: isInWatchlist
-                ? FontAwesomeIcons.solidBookmark
-                : FontAwesomeIcons.bookmark,
+            icon: FaIcon(
+              isInWatchlist
+                  ? FontAwesomeIcons.solidBookmark
+                  : FontAwesomeIcons.bookmark,
+              size: 22,
+            ),
             label: "Watchlist",
             color: isInWatchlist
                 ? AppColors.auroraPink
@@ -63,7 +66,7 @@ class ActionButtonBar extends ConsumerWidget {
           // Mark as Watched Button
           _buildActionButton(
             context: context,
-            icon: FontAwesomeIcons.solidEye,
+            icon: const FaIcon(FontAwesomeIcons.solidEye, size: 22),
             label: "Watched",
             color: isWatched
                 ? AppColors.auroraPink
@@ -82,7 +85,7 @@ class ActionButtonBar extends ConsumerWidget {
           // --- NEW "ADD TO LIST" BUTTON ---
           _buildActionButton(
             context: context,
-            icon: Icons.playlist_add_rounded,
+            icon: const Icon(Icons.playlist_add_rounded, size: 22),
             label: "Add to List",
             onTap: () {
               // This shows our new, powerful bottom sheet
@@ -108,9 +111,10 @@ class ActionButtonBar extends ConsumerWidget {
           // --- NEW FAVORITE BUTTON (Replaces the Rate button) ---
           _buildActionButton(
             context: context,
-            icon: isFavorite
-                ? FontAwesomeIcons.solidHeart
-                : FontAwesomeIcons.heart,
+            icon: FaIcon(
+              isFavorite ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+              size: 22,
+            ),
             label: "Like",
             color: isFavorite
                 ? Colors.red.shade400
@@ -131,11 +135,12 @@ class ActionButtonBar extends ConsumerWidget {
 
   Widget _buildActionButton({
     required BuildContext context,
-    required IconData icon,
+    required Widget icon,
     required String label,
     required VoidCallback onTap,
     Color? color,
   }) {
+    final effectiveColor = color ?? AppColors.darkTextSecondary;
     return Expanded(
       child: Material(
         color: Colors.transparent,
@@ -147,16 +152,15 @@ class ActionButtonBar extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                FaIcon(
-                  icon,
-                  color: color ?? AppColors.darkTextSecondary,
-                  size: 22,
+                IconTheme.merge(
+                  data: IconThemeData(color: effectiveColor, size: 22),
+                  child: icon,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   label,
                   style: TextStyle(
-                    color: color ?? AppColors.darkTextSecondary,
+                    color: effectiveColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),

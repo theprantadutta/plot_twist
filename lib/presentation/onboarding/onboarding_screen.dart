@@ -137,7 +137,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
 // A reusable widget for each page of the onboarding flow
 class _OnboardingPage extends StatelessWidget {
-  final IconData icon;
+  final FaIconData icon;
   final String title;
   final String description;
 

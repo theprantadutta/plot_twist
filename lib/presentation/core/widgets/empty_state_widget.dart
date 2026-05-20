@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../app_colors.dart';
 
 class EmptyStateWidget extends StatelessWidget {
-  final IconData icon;
+  final FaIconData icon;
   final String title;
   final String message;
 

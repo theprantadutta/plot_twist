@@ -189,7 +189,7 @@ class _FlippableMovieCardState extends State<FlippableMovieCard>
     required double angle,
     required double opacity,
     required Color color,
-    required IconData icon,
+    required FaIconData icon,
     required String text,
   }) {
     return Opacity(

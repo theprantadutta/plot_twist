@@ -71,7 +71,7 @@ class InfoHeader extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(
+                        const FaIcon(
                           FontAwesomeIcons.solidStar,
                           color: Colors.amber,
                           size: 16,

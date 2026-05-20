@@ -108,7 +108,7 @@ class StatGrid extends ConsumerWidget {
 class _StatCard extends StatelessWidget {
   final String value;
   final String label;
-  final IconData icon;
+  final FaIconData icon;
   final Color color;
 
   const _StatCard({

@@ -171,7 +171,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
 
   Widget _buildActionButton({
     required VoidCallback onPressed,
-    required IconData icon,
+    required FaIconData icon,
     Color? color,
     bool isSmall = false,
   }) {

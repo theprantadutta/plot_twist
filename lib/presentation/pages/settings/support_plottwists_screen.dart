@@ -68,11 +68,11 @@ class SupportPlotTwistsScreen extends ConsumerWidget {
                         child: Center(
                           child: Column(
                             children: [
-                              Icon(
+                              FaIcon(
                                 FontAwesomeIcons.faceSadTear,
                                 size: 40,
-                                color: AppColors.darkTextSecondary.withOpacity(
-                                  0.5,
+                                color: AppColors.darkTextSecondary.withValues(
+                                  alpha: 0.5,
                                 ),
                               ),
                               const SizedBox(height: 16),
