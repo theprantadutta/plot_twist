@@ -46,10 +46,10 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = (keystoreProperties["storeFile"] as String?)?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String?
         }
     }
 
@@ -67,8 +67,9 @@ kotlin {
 }
 
 dependencies {
-    implementation("androidx.window:window:1.0.0")
-    implementation("androidx.window:window-java:1.0.0")
+    implementation("androidx.window:window:1.3.0")
+    // For Java-friendly APIs to register and unregister callbacks
+    implementation("androidx.window:window-java:1.3.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 

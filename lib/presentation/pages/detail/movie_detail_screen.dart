@@ -134,9 +134,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-      initialVideoId: widget.videoKey,
-      flags: const YoutubePlayerFlags(autoPlay: true, forceHD: true),
+    _controller = YoutubePlayerController.fromVideoId(
+      videoId: widget.videoKey,
+      autoPlay: true,
     );
   }
 
@@ -151,7 +151,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller.close();
     super.dispose();
   }
 }
